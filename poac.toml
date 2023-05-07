@@ -1,0 +1,5 @@
+[package]
+name = "cxx-data-structure-profiler"
+version = "0.1.0"
+authors = []
+edition = 2020

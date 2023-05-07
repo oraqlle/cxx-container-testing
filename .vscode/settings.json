@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.tpl": "cpp",
+        "*.bazel": "starlark",
+        "iostream": "cpp"
+    }
+}
