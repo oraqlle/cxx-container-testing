@@ -1,5 +1,8 @@
 [package]
-name = "cxx-data-structure-profiler"
+name = "cxx-container-testing"
 version = "0.1.0"
-authors = []
+authors = ["Tyler Swann <41113853+oraqlle@users.noreply.github.com>"]
 edition = 2020
+license = "MIT"
+repository = "https://github.com/oraqlle/cxx-container-testing"
+description = "Simple Tests of C++ standard containers"
