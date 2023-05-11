@@ -1,9 +1,9 @@
 /// Copyright 2023 Tyler Swann
 
 #include <fmt/core.h>
-#include <fmt/std.h>
 #include <fmt/format.h>
 #include <fmt/ranges.h>
+#include <fmt/std.h>
 
 #include <range/v3/range/conversion.hpp>
 
@@ -12,30 +12,29 @@
 #include <chrono>
 #include <concepts>
 #include <deque>
+#include <functional>
+#include <iterator>
 #include <list>
+#include <numeric>
+#include <optional>
 #include <random>
 #include <ranges>
 #include <string>
-#include <vector>
-#include <optional>
 #include <unordered_map>
-#include <numeric>
-#include <functional>
 #include <utility>
-#include <iterator>
+#include <vector>
 
 template <
-    template<typename> class Container,
+    template <typename> class Container,
     typename DataType = double,
     // typename Duration = std::chrono::duration<double>,
     typename Duration = std::chrono::microseconds,
-    std::size_t Repeats = 7
->
+    std::size_t Repeats = 7,
+    bool Preallocate = false>
     requires std::default_initializable<Container<DataType>>
 class Tester {
 
 public:
-
     enum class TestKind : short {
         PUSH_BACK,
         PUSH_FRONT,
@@ -46,13 +45,7 @@ public:
         INCREMENTAL_SORTED_INSERT
     };
 
-    enum class DataKind : short {
-        SMALL,
-        LARGE,
-        NON_TRIVIAL
-    };
-
-    struct NonTrivialType {};
+    struct NonTrivialType { };
 
 public:
     using size_type = std::size_t;
@@ -64,17 +57,15 @@ public:
     using results_type = std::vector<Duration>;
 
 public:
-
     Tester() noexcept = default;
 
-    explicit Tester(sizes_type sizes, bool preallocate) noexcept
+    explicit Tester(sizes_type sizes) noexcept
         : container {}
         , sizes { sizes }
-        , engine { std::random_device{}() }
+        , engine { std::random_device {}() }
         , int_distrib { std::numeric_limits<unsigned long long>::min(), std::numeric_limits<unsigned long long>::max() }
         , real_distrib { std::numeric_limits<double>::min(), std::numeric_limits<double>::max() }
         , results {}
-        , preallocate { preallocate }
     {
     }
 
@@ -86,67 +77,63 @@ public:
     /// Run a particular test
     auto run(TestKind test_kind) noexcept -> void
     {
-        switch (test_kind)
-        {
-            case TestKind::PUSH_BACK:
-                _M_run(std::mem_fn(&Tester::_M_push_back));
-                break;
+        switch (test_kind) {
+        case TestKind::PUSH_BACK:
+            _M_run(std::mem_fn(&Tester::_M_push_back));
+            break;
 
-            case TestKind::PUSH_FRONT:
-                // _M_run(std::mem_fn(this, Tester::_M_push_front));
-                break;
+        case TestKind::PUSH_FRONT:
+            // _M_run(std::mem_fn(this, Tester::_M_push_front));
+            break;
 
-            case TestKind::LINEAR_SEARCH:
-                // _M_run(std::mem_fn(this, Tester::_M_linear_search));
-                break;
+        case TestKind::LINEAR_SEARCH:
+            // _M_run(std::mem_fn(this, Tester::_M_linear_search));
+            break;
 
-            case TestKind::RANDOM_INSERT:
-                // _M_run(std::mem_fn(this, Tester::_M_random_insert));
-                break;
+        case TestKind::RANDOM_INSERT:
+            // _M_run(std::mem_fn(this, Tester::_M_random_insert));
+            break;
 
-            case TestKind::DESTRUCTION:
-                // _M_run(std::mem_fn(this, Tester::_M_destruction));
-                break;
+        case TestKind::DESTRUCTION:
+            // _M_run(std::mem_fn(this, Tester::_M_destruction));
+            break;
 
-            case TestKind::SORT:
-                // _M_run(std::mem_fn(this, Tester::_M_sort));
-                break;
+        case TestKind::SORT:
+            // _M_run(std::mem_fn(this, Tester::_M_sort));
+            break;
 
-            case TestKind::INCREMENTAL_SORTED_INSERT:
-                // _M_run(std::mem_fn(this, Tester::_M_incremental_sorted_insert));
-                break;
+        case TestKind::INCREMENTAL_SORTED_INSERT:
+            // _M_run(std::mem_fn(this, Tester::_M_incremental_sorted_insert));
+            break;
         }
 
         using namespace std::literals;
-        auto r = results | std::views::transform([](auto d){ return std::to_string(d.count()) + "us"s; });
+        auto r = results | std::views::transform([](auto d) { return std::to_string(d.count()) + "us"s; });
         fmt::print("{}\n", fmt::join(r, ", "));
     }
 
     /// Run all tests and return the results
     /// in a hashmap.
-    auto run_all() noexcept 
+    auto run_all() noexcept
         -> std::unordered_map<std::string, results_type>;
 
     auto clear() noexcept -> void;
 
     auto write_results(std::string filename) noexcept -> void;
-    
-private:
 
+private:
     auto _M_run(std::function<Duration(Tester*, size_type)>&& fn) noexcept -> void
     {
-        auto times = std::vector<Duration>(sizes.size(), Duration{});
+        auto times = std::vector<Duration>(sizes.size(), Duration {});
 
-        for (auto i { 0 }; auto size : sizes)
-        {
-            // if (preallocate && std::is_same_v<Container<DataType>, std::vector<DataType>>)
-                // container.reserve(size);
+        for (auto i { 0 }; auto size : sizes) {
+            if constexpr (Preallocate && std::is_same_v<Container<DataType>, std::vector<DataType>>)
+                container.reserve(size);
 
-            for (auto repeat { 0 }; repeat < Repeats; ++repeat)
-            {
+            for (auto repeat { 0 }; repeat < Repeats; ++repeat) {
                 auto duration = fn(this, size);
                 times.at(i) += duration;
-                container = Container<DataType>{};
+                container = Container<DataType> {};
             }
 
             i += 1;
@@ -160,10 +147,9 @@ private:
     auto _M_push_back(size_type size) noexcept
         -> Duration
     {
-        auto total_time = Duration{};
+        auto total_time = Duration {};
 
-        for (auto i { 0 }; i < size; ++i)
-        {
+        for (auto i { 0 }; i < size; ++i) {
             auto num = real_distrib(engine);
             auto start = clock_type::now();
             container.push_back(num);
@@ -211,7 +197,6 @@ private:
     int_distribution_type int_distrib;
     real_distribution_type real_distrib;
     results_type results;
-    bool preallocate;
 }; /// class Tester
 
 int main(int argc, char** argv)
@@ -221,13 +206,15 @@ int main(int argc, char** argv)
         | std::views::take(10)
         | ranges::to<std::vector<std::size_t>>();
 
-    auto test_list = Tester<std::list>(sizes, false);
-    auto test_deque = Tester<std::deque>(sizes, false);
-    auto test_vector = Tester<std::vector>(sizes, false);
+    auto test_list = Tester<std::list>(sizes);
+    auto test_deque = Tester<std::deque>(sizes);
+    auto test_vector = Tester<std::vector>(sizes);
+    auto test_vector_pre = Tester<std::vector, double, std::chrono::microseconds, 7, true>(sizes);
 
     test_list.run(Tester<std::list>::TestKind::PUSH_BACK);
     test_deque.run(Tester<std::deque>::TestKind::PUSH_BACK);
     test_vector.run(Tester<std::vector>::TestKind::PUSH_BACK);
+    test_vector_pre.run(Tester<std::vector, double, std::chrono::microseconds, 7, true>::TestKind::PUSH_BACK);
 
     return 0;
 }
