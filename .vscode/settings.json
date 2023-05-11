@@ -3,6 +3,8 @@
         "*.tpl": "cpp",
         "*.bazel": "starlark",
         "iostream": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "concepts": "cpp",
+        "numeric": "cpp"
     }
 }

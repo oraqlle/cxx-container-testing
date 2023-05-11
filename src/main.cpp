@@ -27,7 +27,8 @@
 template <
     template<typename> class Container,
     typename DataType = double,
-    typename Duration = std::chrono::milliseconds,
+    // typename Duration = std::chrono::duration<double>,
+    typename Duration = std::chrono::microseconds,
     std::size_t Repeats = 7
 >
     requires std::default_initializable<Container<DataType>>
@@ -117,7 +118,7 @@ public:
         }
 
         using namespace std::literals;
-        auto r = results | std::views::transform([](auto d){ return std::to_string(d.count()) + "ms"s; });
+        auto r = results | std::views::transform([](auto d){ return std::to_string(d.count()) + "us"s; });
         fmt::print("{}\n", fmt::join(r, ", "));
     }
 
@@ -159,15 +160,19 @@ private:
     auto _M_push_back(size_type size) noexcept
         -> Duration
     {
-        auto start = clock_type::now();
+        auto total_time = Duration{};
+
         for (auto i { 0 }; i < size; ++i)
         {
             auto num = real_distrib(engine);
+            auto start = clock_type::now();
             container.push_back(num);
+            auto end = clock_type::now();
+            total_time += std::chrono::duration_cast<Duration>(end - start);
         }
-        auto end = clock_type::now();
 
-        return std::chrono::duration_cast<Duration>(end - start);
+        // return std::chrono::duration_cast<Duration>(end - start);
+        return total_time;
     }
 
     /// Push front test for a particular
