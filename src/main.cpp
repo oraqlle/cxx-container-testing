@@ -25,10 +25,10 @@ int main(int argc, char** argv)
         | std::views::take(10)
         | ranges::to<std::vector<std::size_t>>();
 
-    auto vector_benchmark = Benchmark<std::vector, double> { sizes };
-    auto results = vector_benchmark.run<tests::PushBack, makers::Empty, std::chrono::milliseconds>();
+    auto vector_benchmark = Benchmark<std::vector, double> { };
+    auto results = vector_benchmark.run<tests::PushBack, makers::Empty, std::chrono::milliseconds>(sizes);
 
-    fmt::print("{}\n", results);
+    fmt::print("Vector: {}\n", results);
 
     return 0;
 }
