@@ -2,6 +2,7 @@
     "files.associations": {
         "*.tpl": "cpp",
         "*.bazel": "starlark",
+        "*.rddl": "txt",
         "iostream": "cpp",
         "ostream": "cpp",
         "concepts": "cpp",
@@ -63,6 +64,14 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "bitset": "cpp",
+        "complex": "cpp",
+        "condition_variable": "cpp",
+        "map": "cpp",
+        "unordered_set": "cpp",
+        "regex": "cpp",
+        "mutex": "cpp",
+        "typeindex": "cpp"
     }
 }
