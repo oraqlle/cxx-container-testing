@@ -14,6 +14,19 @@ struct Empty {
     inline static auto clean() noexcept -> void { }
 };
 
+template <typename Container>
+struct Preallocated {
+    inline static auto make([[maybe_unused]] std::size_t size) noexcept
+        -> Container
+    {
+        auto container = Container {};
+        container.reserve(size);
+        return container;
+    }
+
+    inline static auto clean() noexcept -> void { }
+};
+
 } // namespace makers
 
 #endif // MAKERS
