@@ -45,9 +45,6 @@ brew install matplotplusplus
 To run the tests simply run the following command in the root of the project.
 
 ```sh
-sudo ln -s /home/linuxbrew/.linuxbrew/include/matplot /usr/local/include
-sudo mdkir /usr/local/lib/matplot 
-sudo ln -s /home/linuxbrew/.linuxbrew/lib/libmatplot.so /usr/local/lib/matplot/libmatplot.so
 chmod +x ./makedb-new.sh
 chmod +x ./run.sh
 
