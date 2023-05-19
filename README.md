@@ -7,6 +7,7 @@ A simple program that runs a series of tests on C++ standard containers. The tes
 - [C++ Container Testing](#c-container-testing)
   - [Contents](#contents)
   - [Tests](#tests)
+  - [Dependencies](#dependencies)
   - [Running Tests](#running-tests)
   - [License](#license)
   - [Acknowledgments](#acknowledgments)
@@ -31,12 +32,26 @@ Currently, only the following containers are tested.
 - `std::deque`
 - `std::list`
 
+## Dependencies
+
+Current this project needs matplot++ as an external dependency. You can obtain it from Homebrew using the following command.
+
+```sh
+brew install matplotplusplus
+```
+
 ## Running Tests
 
 To run the tests simply run the following command in the root of the project.
 
 ```sh
-poac run -r
+sudo ln -s /home/linuxbrew/.linuxbrew/include/matplot /usr/local/include
+sudo mdkir /usr/local/lib/matplot 
+sudo ln -s /home/linuxbrew/.linuxbrew/lib/libmatplot.so /usr/local/lib/matplot/libmatplot.so
+chmod +x ./makedb-new.sh
+chmod +x ./run.sh
+
+./run <debug | release>
 ```
 
 ## License

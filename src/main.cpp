@@ -17,8 +17,13 @@
 #include <benchmark.hpp>
 #include <makers.hpp>
 #include <tests.hpp>
+#include <types.hpp>
+#include <runners.hpp>
+#include <plot.hpp>
 
 using namespace std::literals;
+
+using SmallType = types::Trivial<8>;
 
 int main(int argc, char** argv)
 {
@@ -27,15 +32,17 @@ int main(int argc, char** argv)
         | std::views::take(10)
         | ranges::to<std::vector<std::size_t>>();
 
-    auto list_results = benchmark::run<std::list<double>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes);
-    auto deque_results = benchmark::run<std::deque<double>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes);
-    auto vec_results = benchmark::run<std::vector<double>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes);
-    auto pre_vec_results = benchmark::run<std::vector<double>, tests::PushBack, makers::Preallocated, std::chrono::microseconds>(sizes);
+    auto list_results = benchmark::run<std::list<SmallType>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes);
+    auto deque_results = benchmark::run<std::deque<SmallType>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes);
+    auto vec_results = benchmark::run<std::vector<SmallType>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes);
+    auto pre_vec_results = benchmark::run<std::vector<SmallType>, tests::PushBack, makers::Preallocated, std::chrono::microseconds>(sizes);
 
     fmt::print("List:                 {}\n", list_results);
     fmt::print("Deque:                {}\n", deque_results);
     fmt::print("Vector:               {}\n", vec_results);
     fmt::print("Pre-allocated Vector: {}\n", pre_vec_results);
+
+    plot::graph();
 
     return 0;
 }

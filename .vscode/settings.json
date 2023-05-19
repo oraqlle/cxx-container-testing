@@ -72,6 +72,10 @@
         "unordered_set": "cpp",
         "regex": "cpp",
         "mutex": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "strstream": "cpp",
+        "forward_list": "cpp",
+        "cfenv": "cpp",
+        "valarray": "cpp"
     }
 }

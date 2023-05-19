@@ -10,4 +10,4 @@ description = "Simple Tests of C++ standard containers"
 [dependencies]
 fmt = { version = "9.1.0", registry = "conan-v1" }
 range-v3 = { version = "0.12.0", registry = "conan-v1" }
-# expected-lite = { version = "0.6.3", registry = "conan-v1" }
+# ftxui = { version = "4.0.0", registry = "conan-v1" }
