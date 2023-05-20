@@ -7,7 +7,6 @@ A simple program that runs a series of tests on C++ standard containers. The tes
 - [C++ Container Testing](#c-container-testing)
   - [Contents](#contents)
   - [Tests](#tests)
-  - [Dependencies](#dependencies)
   - [Running Tests](#running-tests)
   - [License](#license)
   - [Acknowledgments](#acknowledgments)
@@ -32,23 +31,12 @@ Currently, only the following containers are tested.
 - `std::deque`
 - `std::list`
 
-## Dependencies
-
-Current this project needs matplot++ as an external dependency. You can obtain it from Homebrew using the following command.
-
-```sh
-brew install matplotplusplus
-```
-
 ## Running Tests
 
 To run the tests simply run the following command in the root of the project.
 
 ```sh
-chmod +x ./makedb-new.sh
-chmod +x ./run.sh
-
-./run <debug | release>
+poac run -r
 ```
 
 ## License
@@ -58,4 +46,4 @@ MIT License
 ## Acknowledgments
 
 - Inspired by blog post by Baptiste Wicht - [C++ benchmark – std::vector VS std::list VS std::deque](https://baptiste-wicht.com/posts/2012/12/cpp-benchmark-vector-list-deque.html)
-- Built with [Poac](https://poac.dev/)
+- Built with [Poac - v0.6.0](https://poac.dev/)
