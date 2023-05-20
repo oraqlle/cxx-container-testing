@@ -52,13 +52,16 @@ auto write(
 
     auto doc = rapidcsv::Document { data_path / fname, rapidcsv::LabelParams { 0, 0 } };
 
-    auto size = doc.GetColumnCount();
-    doc.InsertColumn(size - 1, data, column_name);
-    doc.Save();
-}
+    auto idx = doc.GetColumnIdx(column_name);
 
-auto erase(std::string fname) -> void
-{
+    if (idx < 0uL) {
+        auto size = doc.GetColumnCount();
+        doc.InsertColumn(size - 1, data, column_name);
+    } else {
+        doc.SetColumn(idx, data);
+    }
+
+    doc.Save();
 }
 
 } // namespace csv

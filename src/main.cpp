@@ -42,10 +42,12 @@ int main(int argc, char* argv[])
     // fmt::print("Deque:                {}\n", deque_results);
     // fmt::print("Vector:               {}\n", vec_results);
     // fmt::print("Pre-allocated Vector: {}\n", pre_vec_results);
-    ////
+    ///
 
     csv::write("test.csv", "name-1", std::vector<double> { 1.6, 8.01, -0.06 });
-    csv::write("test.csv", "name-2", std::vector<double> { 0.333, 0.01, -15.06 });
+    // csv::write("test.csv", "name-2", std::vector<double> { 0.333, 0.01, -15.06 });
+    // csv::write("test.csv", "name-1", std::vector<double> { 1.23, 4.56, 7.89 });
+    csv::write("test.csv", "name-2", std::vector<double> { -1.333, 110.01, -15777.06 });
 
     return 0;
 }
