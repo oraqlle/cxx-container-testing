@@ -17,9 +17,6 @@
 #include <string_view>
 #include <vector>
 
-using SmallType = types::Trivial<8>;
-using MediumType = types::Trivial<32>;
-
 namespace runners {
 
 using namespace std::literals;
@@ -48,8 +45,11 @@ auto run(std::string_view data_name, const std::vector<std::size_t>& sizes) -> v
 template <typename Duration>
 auto push_back(const std::vector<std::size_t>& sizes) -> void
 {
-    run<SmallType, tests::PushBack, Duration>("small-type", sizes);
-    run<MediumType, tests::PushBack, Duration>("medium-type", sizes);
+    run<types::SmallType, tests::PushBack, Duration>("small-type", sizes);
+    run<types::MediumType, tests::PushBack, Duration>("medium-type", sizes);
+    run<types::LargeType, tests::PushBack, Duration>("large-type", sizes);
+    run<types::HugeType, tests::PushBack, Duration>("huge-type", sizes);
+    run<types::MonsterType, tests::PushBack, Duration>("monster-type", sizes);
 }
 
 template <typename Duration>
