@@ -27,16 +27,21 @@ using namespace std::literals;
 
 template <typename T>
 auto write(
+    fs::path sub_dir,
     std::string fname,
     std::string column_name,
     const std::vector<T>& data,
     const std::source_location src_loc = std::source_location::current()) -> void
 {
     auto data_path = src_absolute_path().parent_path() / ".."sv / "data"sv;
-    auto file_path = data_path / fname;
+    auto sub_data_path = data_path / sub_dir;
+    auto file_path = sub_data_path / fname;
 
     if (!fs::exists(data_path))
         fs::create_directory(data_path);
+
+    if (!fs::exists(sub_data_path))
+        fs::create_directory(sub_data_path);
 
     if (!fs::exists(file_path)) {
         auto doc = rapidcsv::Document {};
@@ -49,7 +54,7 @@ auto write(
         file.close();
     }
 
-    auto doc = rapidcsv::Document { data_path / fname };
+    auto doc = rapidcsv::Document { file_path };
 
     auto idx = doc.GetColumnIdx(column_name);
 

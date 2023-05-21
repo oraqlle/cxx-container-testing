@@ -11,6 +11,7 @@
 
 #include <chrono>
 #include <deque>
+#include <filesystem>
 #include <list>
 #include <ranges>
 #include <string>
@@ -19,44 +20,51 @@
 
 namespace runners {
 
+namespace fs = std::filesystem;
 using namespace std::literals;
 
 auto to_count = std::views::transform([](auto x) { return x.count(); });
 
-template <
-    typename T,
-    template <typename> class Test,
-    typename Duration>
-auto run(std::string_view data_name, const std::vector<std::size_t>& sizes) -> void
-{
-    auto list_results = benchmark::run<std::list<T>, Test, makers::Empty, Duration>(sizes);
-    auto deque_results = benchmark::run<std::deque<T>, Test, makers::Empty, Duration>(sizes);
-    auto vec_results = benchmark::run<std::vector<T>, Test, makers::Empty, Duration>(sizes);
-    auto pre_vec_results = benchmark::run<std::vector<T>, Test, makers::Preallocated, Duration>(sizes);
+template <typename T>
+struct PushBack {
+    static auto run() -> void
+    {
+        auto sizes = std::views::iota(1)
+            | std::views::transform([](auto x) { return x * 100'000uL; })
+            | std::views::take(10)
+            | ranges::to<std::vector<std::size_t>>();
 
-    auto fname = ""s.append(data_name) + "-"s.append(Test<void>::name) + ".csv"s;
-    csv::write(fname, "elements"s, sizes);
-    csv::write(fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>());
-    csv::write(fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>());
-    csv::write(fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
-    csv::write(fname, "preallocated std::vector"s, pre_vec_results | to_count | ranges::to<std::vector<long double>>());
+        auto list_results = benchmark::run<std::list<T>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes);
+        auto deque_results = benchmark::run<std::deque<T>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes);
+        auto vec_results = benchmark::run<std::vector<T>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes);
+        auto pre_vec_results = benchmark::run<std::vector<T>, tests::PushBack, makers::Preallocated, std::chrono::microseconds>(sizes);
+
+        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto sub_dir_name = fs::path { tests::PushBack<void>::name };
+        csv::write(sub_dir_name, fname, "elements"s, sizes);
+        csv::write(sub_dir_name, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>());
+        csv::write(sub_dir_name, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>());
+        csv::write(sub_dir_name, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
+        csv::write(sub_dir_name, fname, "preallocated std::vector"s, pre_vec_results | to_count | ranges::to<std::vector<long double>>());
+    }
+}; // struct PushBack
+
+template <template <typename> class Runner>
+auto run_for_types() -> void
+{
 }
 
-template <typename Duration>
-auto push_back(const std::vector<std::size_t>& sizes) -> void
+template <template <typename> class Runner, typename T, typename... Ts>
+auto run_for_types() -> void
 {
-    run<types::SmallType, tests::PushBack, Duration>("small-type", sizes);
-    run<types::MediumType, tests::PushBack, Duration>("medium-type", sizes);
-    run<types::LargeType, tests::PushBack, Duration>("large-type", sizes);
-    run<types::HugeType, tests::PushBack, Duration>("huge-type", sizes);
-    run<types::MonsterType, tests::PushBack, Duration>("monster-type", sizes);
+    Runner<T>::run();
+    run_for_types<Runner, Ts...>();
 }
 
-template <typename Duration>
-auto all(const std::vector<std::size_t>& sizes) -> void
+template <typename... Ts>
+auto all() -> void
 {
-    push_back<Duration>(sizes);
-    // front_back<Duration>(sizes);
+    run_for_types<PushBack, Ts...>();
 }
 
 } // namespace runners
