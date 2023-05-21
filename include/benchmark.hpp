@@ -1,5 +1,5 @@
-#ifndef BENCHMARK
-#define BENCHMARK
+#ifndef CXX_CONTAINER_TESTING_BENCHMARK
+#define CXX_CONTAINER_TESTING_BENCHMARK
 
 #include <algorithm>
 #include <chrono>
@@ -45,4 +45,4 @@ inline auto run(Sizes sizes) noexcept
 }
 } // namespace benchmark
 
-#endif // BENCHMARK
+#endif // CXX_CONTAINER_TESTING_BENCHMARK

@@ -1,5 +1,5 @@
-#ifndef TESTS_CONCEPTS
-#define TESTS_CONCEPTS
+#ifndef CXX_CONTAINER_TESTING_CONCEPTS
+#define CXX_CONTAINER_TESTING_CONCEPTS
 
 #include <concepts>
 
@@ -17,4 +17,4 @@ concept Maker = requires(MakerType<Container> maker, Container container) {
 
 } // namespace tests
 
-#endif // TESTS_CONCEPTS
+#endif // CXX_CONTAINER_TESTING_CONCEPTS

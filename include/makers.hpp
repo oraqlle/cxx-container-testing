@@ -1,5 +1,5 @@
-#ifndef MAKERS
-#define MAKERS
+#ifndef CXX_CONTAINER_TESTING_MAKERS
+#define CXX_CONTAINER_TESTING_MAKERS
 
 namespace makers {
 
@@ -29,4 +29,4 @@ struct Preallocated {
 
 } // namespace makers
 
-#endif // MAKERS
+#endif // CXX_CONTAINER_TESTING_MAKERS

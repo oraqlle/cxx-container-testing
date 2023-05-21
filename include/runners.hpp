@@ -1,11 +1,9 @@
-#ifndef RUNNERS
-#define RUNNERS
+#ifndef CXX_CONTAINER_TESTING_RUNNERS
+#define CXX_CONTAINER_TESTING_RUNNERS
 
+#include <benchmark.hpp>
 #include <csv-writer.hpp>
-
-#include <fmt/core.h>
-#include <fmt/ranges.h>
-#include <fmt/std.h>
+#include <makers.hpp>
 
 #include <range/v3/range/conversion.hpp>
 
@@ -36,19 +34,14 @@ auto run(const std::vector<std::size_t>& sizes) -> void
     auto vec_results = benchmark::run<std::vector<T>, Test, makers::Empty, Duration>(sizes);
     auto pre_vec_results = benchmark::run<std::vector<T>, Test, makers::Preallocated, Duration>(sizes);
 
-    fmt::print("l: {}\n", list_results);
-    fmt::print("d: {}\n", deque_results);
-    fmt::print("v: {}\n", vec_results);
-    fmt::print("p: {}\n", pre_vec_results);
-
-    auto fname = (""s).append(Test<std::vector<T>>::name) + ".csv"s;
-    csv::write(fname, "times"s, sizes);
+    auto fname = ""s.append(Test<std::vector<T>>::name) + ".csv"s;
+    csv::write(fname, "elements"s, sizes);
     csv::write(fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>());
-    // csv::write(fname, "std::deque"s, deque_results);
-    // csv::write(fname, "std::vector"s, vec_results);
-    // csv::write(fname, "preallocated std::vector"s, pre_vec_results);
+    csv::write(fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>());
+    csv::write(fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
+    csv::write(fname, "preallocated std::vector"s, pre_vec_results | to_count | ranges::to<std::vector<long double>>());
 }
 
 } // namespace runners
 
-#endif // RUNNERS
+#endif // CXX_CONTAINER_TESTING_RUNNERS

@@ -1,5 +1,5 @@
-#ifndef TYPES
-#define TYPES
+#ifndef CXX_CONTAINER_TESTING_TYPES
+#define CXX_CONTAINER_TESTING_TYPES
 
 #include <array>
 
@@ -20,4 +20,4 @@ struct Trivial<sizeof(std::size_t)> {
 
 } // namespace types
 
-#endif // TYPES
+#endif // CXX_CONTAINER_TESTING_TYPES

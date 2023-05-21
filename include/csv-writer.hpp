@@ -38,9 +38,8 @@ auto write(
     if (!fs::exists(data_path))
         fs::create_directory(data_path);
 
-    if (!fs::exists(file_path))
-    {
-        auto doc = rapidcsv::Document { };
+    if (!fs::exists(file_path)) {
+        auto doc = rapidcsv::Document {};
 
         auto file = std::fstream {
             file_path,

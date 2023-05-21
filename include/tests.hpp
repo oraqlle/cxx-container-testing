@@ -1,5 +1,5 @@
-#ifndef TESTS
-#define TESTS
+#ifndef CXX_CONTAINER_TESTING_TESTS
+#define CXX_CONTAINER_TESTING_TESTS
 
 #include <string_view>
 
@@ -21,4 +21,4 @@ struct PushBack {
 
 } // namespace test
 
-#endif // TESTS_PUSH_BACK
+#endif // CXX_CONTAINER_TESTING_TESTS
