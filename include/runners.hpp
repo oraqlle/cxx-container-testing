@@ -34,7 +34,7 @@ auto run(const std::vector<std::size_t>& sizes) -> void
     auto vec_results = benchmark::run<std::vector<T>, Test, makers::Empty, Duration>(sizes);
     auto pre_vec_results = benchmark::run<std::vector<T>, Test, makers::Preallocated, Duration>(sizes);
 
-    auto fname = ""s.append(Test<std::vector<T>>::name) + ".csv"s;
+    auto fname = ""s.append(Test<void>::name) + ".csv"s;
     csv::write(fname, "elements"s, sizes);
     csv::write(fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>());
     csv::write(fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>());

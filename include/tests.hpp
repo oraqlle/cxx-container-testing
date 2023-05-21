@@ -7,7 +7,6 @@ namespace tests {
 
 template <typename Container>
 struct PushBack {
-    constexpr static std::string_view name = "pushback";
 
     using value_type = typename Container::value_type;
 
@@ -18,6 +17,11 @@ struct PushBack {
     }
 
 }; // struct PushBack
+
+template <>
+struct PushBack<void> {
+    constexpr static std::string_view name = "pushback";
+};
 
 } // namespace test
 
