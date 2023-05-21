@@ -50,12 +50,13 @@ auto write(
         file.close();
     }
 
-    auto doc = rapidcsv::Document { data_path / fname, rapidcsv::LabelParams { 0, 0 } };
+    auto doc = rapidcsv::Document { data_path / fname };
 
     auto idx = doc.GetColumnIdx(column_name);
 
     if (idx < 0) {
         auto size = doc.GetColumnCount();
+        size = size == 0 ? 1 : size;
         doc.InsertColumn(size - 1, data, column_name);
     } else {
         doc.SetColumn(idx, data);
