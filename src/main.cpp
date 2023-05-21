@@ -3,7 +3,7 @@
 #include <runners.hpp>
 #include <tests.hpp>
 #include <types.hpp>
-/////////////
+
 #include <range/v3/range/conversion.hpp>
 
 #include <chrono>
@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
         | std::views::take(10)
         | ranges::to<std::vector<std::size_t>>();
 
-    runners::run<SmallType, tests::PushBack, std::chrono::microseconds>(sizes);
+    runners::run<SmallType, tests::PushBack, std::chrono::microseconds>("small-type", sizes);
 
     return 0;
 }
