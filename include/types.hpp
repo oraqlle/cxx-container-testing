@@ -18,6 +18,11 @@ struct Trivial<sizeof(std::size_t)> {
     auto operator<(const Trivial& other) const noexcept -> bool { return a < other.a; }
 }; // struct Trivial<sizeof(std::size_t)>
 
+template<>
+struct Trivial<0> {
+    constexpr static std::string_view name = "Trivial";
+}; // struct Trivial<0>
+
 } // namespace types
 
 #endif // CXX_CONTAINER_TESTING_TYPES
