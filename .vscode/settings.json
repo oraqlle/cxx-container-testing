@@ -3,6 +3,7 @@
         "*.tpl": "cpp",
         "*.bazel": "starlark",
         "*.rddl": "txt",
+        "*.slurm": "shellscript",
         "iostream": "cpp",
         "ostream": "cpp",
         "concepts": "cpp",
@@ -76,6 +77,7 @@
         "strstream": "cpp",
         "forward_list": "cpp",
         "cfenv": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "source_location": "cpp"
     }
 }

@@ -54,11 +54,12 @@ auto write(
 
     auto idx = doc.GetColumnIdx(column_name);
 
-    if (idx < 0uL) {
+    if (idx < 0) {
         auto size = doc.GetColumnCount();
         doc.InsertColumn(size - 1, data, column_name);
     } else {
         doc.SetColumn(idx, data);
+        doc.SetColumnName(idx, column_name);
     }
 
     doc.Save();
