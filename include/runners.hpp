@@ -4,6 +4,8 @@
 #include <benchmark.hpp>
 #include <csv-writer.hpp>
 #include <makers.hpp>
+#include <tests.hpp>
+#include <types.hpp>
 
 #include <range/v3/range/conversion.hpp>
 
@@ -15,7 +17,8 @@
 #include <string_view>
 #include <vector>
 
-// Run the given test for specified type on all data structures.
+using SmallType = types::Trivial<8>;
+using MediumType = types::Trivial<32>;
 
 namespace runners {
 
@@ -40,6 +43,20 @@ auto run(std::string_view data_name, const std::vector<std::size_t>& sizes) -> v
     csv::write(fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>());
     csv::write(fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
     csv::write(fname, "preallocated std::vector"s, pre_vec_results | to_count | ranges::to<std::vector<long double>>());
+}
+
+template <typename Duration>
+auto push_back(const std::vector<std::size_t>& sizes) -> void
+{
+    run<SmallType, tests::PushBack, Duration>("small-type", sizes);
+    run<MediumType, tests::PushBack, Duration>("medium-type", sizes);
+}
+
+template <typename Duration>
+auto all(const std::vector<std::size_t>& sizes) -> void
+{
+    push_back<Duration>(sizes);
+    // front_back<Duration>(sizes);
 }
 
 } // namespace runners
