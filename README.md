@@ -8,6 +8,7 @@ A simple program that runs a series of tests on C++ standard containers. The tes
   - [Contents](#contents)
   - [Tests](#tests)
   - [Running Tests](#running-tests)
+  - [Plot Results](#plot-results)
   - [License](#license)
   - [Acknowledgments](#acknowledgments)
 
@@ -33,10 +34,19 @@ Currently, only the following containers are tested.
 
 ## Running Tests
 
-To run the tests simply run the following command in the root of the project.
+To run the tests simply run the following command in the root of the project. The results are stored as `*.csv` in the `data/` directory. This directory is split first by the test type and then the sized element used for that test.
 
 ```sh
 poac run -r
+```
+
+## Plot Results
+
+To plot the results a small Go package has been included that is used to plot the results as `*.svg` into the `imgs/` directory. The `imgs/` directory mirrors the structure of the `data/` directory.
+
+```sh
+go build -o bin/plotter
+bin/plotter
 ```
 
 ## License
@@ -47,3 +57,4 @@ MIT License
 
 - Inspired by blog post by Baptiste Wicht - [C++ benchmark – std::vector VS std::list VS std::deque](https://baptiste-wicht.com/posts/2012/12/cpp-benchmark-vector-list-deque.html)
 - Built with [Poac - v0.6.0](https://poac.dev/)
+-
