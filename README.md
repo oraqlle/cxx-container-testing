@@ -57,4 +57,3 @@ MIT License
 
 - Inspired by blog post by Baptiste Wicht - [C++ benchmark – std::vector VS std::list VS std::deque](https://baptiste-wicht.com/posts/2012/12/cpp-benchmark-vector-list-deque.html)
 - Built with [Poac - v0.6.0](https://poac.dev/)
--

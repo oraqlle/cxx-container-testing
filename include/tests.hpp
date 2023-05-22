@@ -18,11 +18,6 @@ struct PushBack {
 
 }; // struct PushBack
 
-template <>
-struct PushBack<void> {
-    constexpr static std::string_view name = "pushback";
-};
-
 } // namespace test
 
 #endif // CXX_CONTAINER_TESTING_TESTS

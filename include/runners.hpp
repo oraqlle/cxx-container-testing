@@ -40,12 +40,11 @@ struct PushBack {
         auto pre_vec_results = benchmark::run<std::vector<T>, tests::PushBack, makers::Preallocated, std::chrono::microseconds>(sizes);
 
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
-        auto sub_dir_name = fs::path { tests::PushBack<void>::name };
-        csv::write(sub_dir_name, fname, "elements"s, sizes);
-        csv::write(sub_dir_name, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>());
-        csv::write(sub_dir_name, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>());
-        csv::write(sub_dir_name, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
-        csv::write(sub_dir_name, fname, "preallocated std::vector"s, pre_vec_results | to_count | ranges::to<std::vector<long double>>());
+        csv::write(fs::path { "pushback" }, fname, "elements"s, sizes);
+        csv::write(fs::path { "pushback" }, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>());
+        csv::write(fs::path { "pushback" }, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>());
+        csv::write(fs::path { "pushback" }, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
+        csv::write(fs::path { "pushback" }, fname, "preallocated std::vector"s, pre_vec_results | to_count | ranges::to<std::vector<long double>>());
     }
 }; // struct PushBack
 
