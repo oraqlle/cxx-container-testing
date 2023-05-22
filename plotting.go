@@ -1,9 +1,11 @@
 package main
 
 import (
+	"image/color"
 	"io/fs"
 	"log"
 	"math"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -49,6 +51,8 @@ func reconstruct_data(input []map[string]string) map[string][]any {
 		}
 	}
 
+	delete(output, "")
+
 	return output
 }
 
@@ -61,18 +65,18 @@ func make_plotter(xValues []any, yValues []any) (plotter.XYs, plotter.XYs) {
 		x := xy.A
 		y := xy.B
 
-		switch typedXValue := x.(type) {
+		switch typedYValue := y.(type) {
 		case float64:
-			pts[i].X = typedXValue
-			ptsLog[i].X = math.Log10(typedXValue)
+			pts[i].Y = typedYValue
+			ptsLog[i].Y = math.Log10(typedYValue)
 		default:
 			continue
 		}
 
-		switch typedYValue := y.(type) {
+		switch typedXValue := x.(type) {
 		case uint64:
-			pts[i].Y = float64(typedYValue)
-			ptsLog[i].Y = float64(typedYValue)
+			pts[i].X = float64(typedXValue)
+			ptsLog[i].X = float64(typedXValue)
 		default:
 			continue
 		}
@@ -98,6 +102,9 @@ func make_x_axis(scale []any) plot.ConstantTicks {
 }
 
 func plot_data(subDirName string, fileName string, data map[string][]any) {
+
+	rand.Seed(int64(0))
+
 	linearPlot := plot.New()
 	logPlot := plot.New()
 
@@ -108,32 +115,42 @@ func plot_data(subDirName string, fileName string, data map[string][]any) {
 	linearPlot.Y.Label.Text = "μs"
 	linearPlot.X.Label.Text = "Number of elements"
 	linearPlot.X.Tick.Marker = xaxis
+	linearPlot.Add(plotter.NewGrid())
 
 	logPlot.Title.Text = subDirName + " - Log Scale"
 	logPlot.Y.Label.Text = "log(μs)"
 	logPlot.Y.Scale = plot.LogScale{}
 	logPlot.X.Label.Text = "Number of elements"
 	logPlot.X.Tick.Marker = xaxis
+	logPlot.Add(plotter.NewGrid())
 
-	for key, xData := range data {
+	for key, yData := range data {
 		if key != "elements" {
-			xs, _ := make_plotter(xData, nElements)
+			ys, ysLog := make_plotter(nElements, yData)
+			lineRGB := color.RGBA{R: uint8(rand.Intn(255)), G: uint8(rand.Intn(255)), B: uint8(rand.Intn(255)), A: 255}
+			// logRGB := color.RGBA{R: uint8(rand.Intn(255)), G: uint8(rand.Intn(255)), B: uint8(rand.Intn(255))}
 
-			xsLine, xsPoints, err := plotter.NewLinePoints(xs)
+			ysLine, ysPoints, err := plotter.NewLinePoints(ys)
 			if err != nil {
 				log.Panic(err)
 			}
 
-			// xsLogLine, xsLogPoints, err := plotter.NewLinePoints(xsLog)
-			// if err != nil {
-			// 	log.Panic(err)
-			// }
+			ysLine.Color = lineRGB
+			ysPoints.Color = lineRGB
 
-			linearPlot.Add(xsLine, xsPoints)
-			linearPlot.Legend.Add(key)
+			ysLogLine, ysLogPoints, err := plotter.NewLinePoints(ysLog)
+			if err != nil {
+				log.Panic(err)
+			}
 
-			// logPlot.Add(xsLogLine, xsLogPoints)
-			// logPlot.Legend.Add(key)
+			// ysLogLine.Color = logRGB
+			// ysLogPoints.Color = logRGB
+
+			linearPlot.Add(ysLine, ysPoints)
+			linearPlot.Legend.Add(key, ysLine, ysPoints)
+
+			logPlot.Add(ysLogLine, ysLogPoints)
+			logPlot.Legend.Add(key, ysLogLine, ysLogPoints)
 		}
 	}
 
@@ -153,15 +170,15 @@ func plot_data(subDirName string, fileName string, data map[string][]any) {
 		}
 	}
 
-	savePathLinear := filepath.Join(subPath, fileName) + ".png"
-	if err := linearPlot.Save(1000, 1000, savePathLinear); err != nil {
+	savePathLinear := filepath.Join(subPath, fileName) + ".svg"
+	if err := linearPlot.Save(1920, 1200, savePathLinear); err != nil {
 		log.Panic(err)
 	}
 
-	// savePathLog := filepath.Join(subPath, fileName) + "Log.png"
-	// if err := logPlot.Save(100, 100, savePathLog); err != nil {
-	// 	log.Panic(err)
-	// }
+	savePathLog := filepath.Join(subPath, fileName) + "Log.svg"
+	if err := logPlot.Save(1920, 1200, savePathLog); err != nil {
+		log.Panic(err)
+	}
 }
 
 func plot_csv(filePath string) {
