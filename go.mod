@@ -14,5 +14,6 @@ require (
 	golang.org/x/exp v0.0.0-20230510235704-dd950f8aeaea // indirect
 	golang.org/x/image v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
+	gonum.org/v1/gonum v0.13.0 // indirect
 	gonum.org/v1/plot v0.13.0 // indirect
 )
