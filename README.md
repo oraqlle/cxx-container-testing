@@ -24,7 +24,7 @@ The tests include:
 - Sort
 - Incremental Sorted Insert
 
-The results of the tests are store in the [`data/`](./data) directory. Graphs of the data are stored in the [`images`](./images) directory.
+The results of the tests are store in the [`data/`](data/) directory. Graphs of the data are stored in the [`imgs/`](imgs/) directory.
 
 Currently, only the following containers are tested.
 
@@ -34,7 +34,7 @@ Currently, only the following containers are tested.
 
 ## Running Tests
 
-To run the tests simply run the following command in the root of the project. The results are stored as `*.csv` in the `data/` directory. This directory is split first by the test type and then the sized element used for that test.
+To run the tests simply run the following command in the root of the project. The results are stored as `*.csv` in the [`data/`](data/) directory. This directory is split first by the test type and then the sized element used for that test.
 
 ```sh
 poac run -r
@@ -42,7 +42,7 @@ poac run -r
 
 ## Plot Results
 
-To plot the results a small Go package has been included that is used to plot the results as `*.svg` into the `imgs/` directory. The `imgs/` directory mirrors the structure of the `data/` directory.
+To plot the results a small Go package has been included that is used to plot the results as `*.svg` into the [`imgs/`](imgs/) directory. The [`imgs/`](imgs/) directory mirrors the structure of the `data/` directory.
 
 ```sh
 go build -o bin/plotter
