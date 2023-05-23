@@ -7,6 +7,9 @@
 
 namespace makers {
 
+using std::ranges::begin;
+using std::ranges::end;
+
 template <typename Container>
 struct Empty {
     [[nodiscard]] static inline auto make([[maybe_unused]] std::size_t size) noexcept
@@ -47,16 +50,17 @@ struct FilledRandom {
 
     using value_type = typename Container::value_type;
 
-    static inline std::mt19937 gen = std::mt19937 { std::random_device {}() };
-    static inline std::uniform_int_distribution<std::size_t> distrib = std::uniform_int_distribution<std::size_t> {
-        std::numeric_limits<std::size_t>::min(),
-        std::numeric_limits<std::size_t>::max()
-    };
-
     [[nodiscard]] static inline auto make(std::size_t size)
     {
         auto container = Container { size };
-        std::ranges::generate(container, []() { return value_type { distrib(gen) }; });
+        auto nums = std::views::iota(0uL)
+            | std::views::take(size)
+            | std::views::common;
+
+        auto temp = std::vector<value_type> { begin(nums), end(nums) };
+
+        std::ranges::shuffle(temp, std::mt19937 { std::random_device {}() });
+        container.assign(begin(temp), end(temp));
 
         return container;
     }

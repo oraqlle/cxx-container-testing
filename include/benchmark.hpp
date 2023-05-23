@@ -1,12 +1,17 @@
 #ifndef CXX_CONTAINER_TESTING_BENCHMARK
 #define CXX_CONTAINER_TESTING_BENCHMARK
 
+#include <fmt/core.h>
+#include <fmt/std.h>
+#include <fmt/color.h>
+
 #include <algorithm>
 #include <chrono>
 #include <concepts>
 #include <initializer_list>
 #include <ranges>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -18,9 +23,23 @@ template <
     typename Duration,
     std::size_t Repeats = 7,
     std::ranges::input_range Sizes>
-inline auto run(Sizes sizes) noexcept
+inline auto run(Sizes sizes, std::string_view test_name, std::string_view container_name) noexcept
     -> std::vector<Duration>
 {
+    fmt::print(
+        "{} {} -- {} {}\n",
+        fmt::styled(
+            "[ Started Test ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::yellow)
+        ),
+        test_name,
+        fmt::styled(
+            "[ Container Type ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::cyan)
+        ),
+        container_name
+    );
+
     using clock_type = std::chrono::high_resolution_clock;
 
     auto results = std::vector<Duration> {};
@@ -41,6 +60,21 @@ inline auto run(Sizes sizes) noexcept
 
     Maker<Container>::clean();
     std::ranges::transform(results, results.begin(), [](auto x) { return x / Repeats; });
+
+    fmt::print(
+        "{} {} -- {} {}\n",
+        fmt::styled(
+            "[ Finished Test ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::green_yellow)
+        ),
+        test_name,
+        fmt::styled(
+            "[ Container Type ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::cyan)
+        ),
+        container_name
+    );
+
     return results;
 }
 } // namespace benchmark
