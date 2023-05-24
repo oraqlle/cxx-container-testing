@@ -78,6 +78,7 @@
         "forward_list": "cpp",
         "cfenv": "cpp",
         "valarray": "cpp",
-        "source_location": "cpp"
+        "source_location": "cpp",
+        "future": "cpp"
     }
 }

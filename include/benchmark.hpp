@@ -1,9 +1,9 @@
 #ifndef CXX_CONTAINER_TESTING_BENCHMARK
 #define CXX_CONTAINER_TESTING_BENCHMARK
 
+#include <fmt/color.h>
 #include <fmt/core.h>
 #include <fmt/std.h>
-#include <fmt/color.h>
 
 #include <algorithm>
 #include <chrono>
@@ -27,18 +27,15 @@ inline auto run(Sizes sizes, std::string_view test_name, std::string_view contai
     -> std::vector<Duration>
 {
     fmt::print(
-        "{} {} -- {} {}\n",
+        "    {} {}\n        {} {}\n",
         fmt::styled(
             "[ Started Test ]:",
-            fmt::emphasis::bold | fmt::fg(fmt::color::yellow)
-        ),
+            fmt::emphasis::bold | fmt::fg(fmt::color::yellow)),
         test_name,
         fmt::styled(
             "[ Container Type ]:",
-            fmt::emphasis::bold | fmt::fg(fmt::color::cyan)
-        ),
-        container_name
-    );
+            fmt::emphasis::bold | fmt::fg(fmt::color::cyan)),
+        container_name);
 
     using clock_type = std::chrono::high_resolution_clock;
 
@@ -62,18 +59,15 @@ inline auto run(Sizes sizes, std::string_view test_name, std::string_view contai
     std::ranges::transform(results, results.begin(), [](auto x) { return x / Repeats; });
 
     fmt::print(
-        "{} {} -- {} {}\n",
+        "    {} {}\n        {} {}\n",
         fmt::styled(
             "[ Finished Test ]:",
-            fmt::emphasis::bold | fmt::fg(fmt::color::green_yellow)
-        ),
+            fmt::emphasis::bold | fmt::fg(fmt::color::green_yellow)),
         test_name,
         fmt::styled(
             "[ Container Type ]:",
-            fmt::emphasis::bold | fmt::fg(fmt::color::cyan)
-        ),
-        container_name
-    );
+            fmt::emphasis::bold | fmt::fg(fmt::color::cyan)),
+        container_name);
 
     return results;
 }

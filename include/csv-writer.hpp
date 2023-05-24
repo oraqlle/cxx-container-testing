@@ -1,6 +1,7 @@
 #ifndef CSV_WRITER
 #define CSV_WRITER
 
+#include <fmt/color.h>
 #include <fmt/core.h>
 #include <fmt/std.h>
 
@@ -33,6 +34,24 @@ auto write(
     const std::vector<T>& data,
     const std::source_location src_loc = std::source_location::current()) -> void
 {
+    fmt::print(
+        "    {}\n        {} {}\n        {} {}\n        {} {}\n",
+        fmt::styled(
+            "[ Started CSV Write ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::red)),
+        fmt::styled(
+            "[ Benchmark ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::magenta)),
+        sub_dir.string(),
+        fmt::styled(
+            "[ Container Type ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::indigo)),
+        column_name,
+        fmt::styled(
+            "[ Element Type ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::teal)),
+        fname.substr(0uL, fname.size() - 4));
+
     auto data_path = src_absolute_path().parent_path() / ".."sv / "data"sv;
     auto sub_data_path = data_path / sub_dir;
     auto file_path = sub_data_path / fname;
@@ -68,6 +87,24 @@ auto write(
     }
 
     doc.Save();
+
+    fmt::print(
+        "    {}\n        {} {}\n        {} {}\n        {} {}\n",
+        fmt::styled(
+            "[ Finished CSV Write ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::olive)),
+        fmt::styled(
+            "[ Benchmark ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::magenta)),
+        sub_dir.string(),
+        fmt::styled(
+            "[ Container Type ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::indigo)),
+        column_name,
+        fmt::styled(
+            "[ Element Type ]:",
+            fmt::emphasis::bold | fmt::fg(fmt::color::teal)),
+        fname.substr(0uL, fname.size() - 4));
 }
 
 } // namespace csv

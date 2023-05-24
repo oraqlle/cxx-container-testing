@@ -1,9 +1,9 @@
 #ifndef CXX_CONTAINER_TESTING_RUNNERS
 #define CXX_CONTAINER_TESTING_RUNNERS
 
+#include <fmt/color.h>
 #include <fmt/core.h>
 #include <fmt/std.h>
-#include <fmt/color.h>
 
 #include <benchmark.hpp>
 #include <csv-writer.hpp>
@@ -16,6 +16,7 @@
 #include <chrono>
 #include <deque>
 #include <filesystem>
+#include <future>
 #include <list>
 #include <ranges>
 #include <string>
@@ -44,18 +45,27 @@ struct PushBack {
     static auto run() -> void
     {
         auto sizes = create_sizes(100'000uL);
+        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto sub_dir = fs::path { "pushback" };
+
+        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
 
         auto list_results = benchmark::run<std::list<T>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes, name, "std::list");
-        auto deque_results = benchmark::run<std::deque<T>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes, name, "std::deque");
-        auto vec_results = benchmark::run<std::vector<T>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes, name, "std::vector");
-        auto pre_vec_results = benchmark::run<std::vector<T>, tests::PushBack, makers::Preallocated, std::chrono::microseconds>(sizes, name, "Preallocated std::vector");
+        szs_ftr.get();
+        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
 
-        auto fname = ""s.append(types::name<T>()) + ".csv"s;
-        csv::write(fs::path { "pushback" }, fname, "elements"s, sizes);
-        csv::write(fs::path { "pushback" }, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>());
-        csv::write(fs::path { "pushback" }, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>());
-        csv::write(fs::path { "pushback" }, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
-        csv::write(fs::path { "pushback" }, fname, "preallocated std::vector"s, pre_vec_results | to_count | ranges::to<std::vector<long double>>());
+        auto deque_results = benchmark::run<std::deque<T>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes, name, "std::deque");
+        lst_ftr.get();
+        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+
+        auto vec_results = benchmark::run<std::vector<T>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes, name, "std::vector");
+        deq_ftr.get();
+        auto vec_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>()); });
+
+        auto pre_vec_results = benchmark::run<std::vector<T>, tests::PushBack, makers::Preallocated, std::chrono::microseconds>(sizes, name, "Preallocated std::vector");
+        vec_ftr.get();
+
+        csv::write(sub_dir, fname, "preallocated std::vector"s, pre_vec_results | to_count | ranges::to<std::vector<long double>>());
     }
 }; // struct PushBack
 
@@ -67,16 +77,22 @@ struct LinearSearch {
     static auto run() -> void
     {
         auto sizes = create_sizes(1'000uL);
-
-        auto list_results = benchmark::run<std::list<T>, tests::LinearSearch, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::list");
-        auto deque_results = benchmark::run<std::deque<T>, tests::LinearSearch, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::deque");
-        auto vec_results = benchmark::run<std::vector<T>, tests::LinearSearch, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::vector");
-
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
-        csv::write(fs::path { "linearsearch" }, fname, "elements"s, sizes);
-        csv::write(fs::path { "linearsearch" }, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>());
-        csv::write(fs::path { "linearsearch" }, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>());
-        csv::write(fs::path { "linearsearch" }, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
+        auto sub_dir = fs::path { "linearsearch" };
+
+        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto list_results = benchmark::run<std::list<T>, tests::LinearSearch, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::list");
+        szs_ftr.get();
+
+        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deque_results = benchmark::run<std::deque<T>, tests::LinearSearch, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::deque");
+        lst_ftr.get();
+
+        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto vec_results = benchmark::run<std::vector<T>, tests::LinearSearch, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::vector");
+        deq_ftr.get();
+
+        csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
     }
 }; // struct LinearSearch
 
@@ -89,34 +105,28 @@ template <template <typename> class Runner, typename T, typename... Ts>
 auto run_for_types() -> void
 {
     fmt::print(
-        "{} {} -- {} {}\n",
+        "{} {}\n    {} {}\n",
         fmt::styled(
             "[ Started Benchmark ]:",
-            fmt::emphasis::bold | fmt::fg(fmt::color::orange)
-        ),
+            fmt::emphasis::bold | fmt::fg(fmt::color::orange)),
         Runner<void>::name,
         fmt::styled(
             "[ Element Type ]:",
-            fmt::emphasis::bold | fmt::fg(fmt::color::purple)
-        ),
-        types::name<T>()
-    );
+            fmt::emphasis::bold | fmt::fg(fmt::color::purple)),
+        types::name<T>());
 
     Runner<T>::run();
 
     fmt::print(
-        "{} {} -- {} {}\n",
+        "{} {}\n    {} {}\n\n",
         fmt::styled(
             "[ Finished Benchmark ]:",
-            fmt::emphasis::bold | fmt::fg(fmt::color::green)
-        ),
+            fmt::emphasis::bold | fmt::fg(fmt::color::green)),
         Runner<void>::name,
         fmt::styled(
             "[ Element Type ]:",
-            fmt::emphasis::bold | fmt::fg(fmt::color::purple)
-        ),
-        types::name<T>()
-    );
+            fmt::emphasis::bold | fmt::fg(fmt::color::purple)),
+        types::name<T>());
 
     run_for_types<Runner, Ts...>();
 }
@@ -128,9 +138,7 @@ auto all() -> void
         "{}\n",
         fmt::styled(
             "[ Started All Benchmarks ]",
-            fmt::emphasis::bold | fmt::fg(fmt::color::gold)
-        )
-    );
+            fmt::emphasis::bold | fmt::fg(fmt::color::gold)));
 
     run_for_types<PushBack, Ts...>();
     run_for_types<LinearSearch, Ts...>();
@@ -139,9 +147,7 @@ auto all() -> void
         "{}\n",
         fmt::styled(
             "[ Finished All Benchmarks ]",
-            fmt::emphasis::bold | fmt::fg(fmt::color::light_green)
-        )
-    );
+            fmt::emphasis::bold | fmt::fg(fmt::color::light_green)));
 }
 
 } // namespace runners
