@@ -46,7 +46,7 @@ struct PushBack {
     {
         auto sizes = create_sizes(100'000uL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
-        auto sub_dir = fs::path { "pushback" };
+        auto sub_dir = fs::path { "push-back" };
 
         auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
 
@@ -78,7 +78,7 @@ struct LinearSearch {
     {
         auto sizes = create_sizes(1'000uL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
-        auto sub_dir = fs::path { "linearsearch" };
+        auto sub_dir = fs::path { "linear-search" };
 
         auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
         auto list_results = benchmark::run<std::list<T>, tests::LinearSearch, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::list");
@@ -90,6 +90,33 @@ struct LinearSearch {
 
         auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
         auto vec_results = benchmark::run<std::vector<T>, tests::LinearSearch, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::vector");
+        deq_ftr.get();
+
+        csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
+    }
+}; // struct LinearSearch
+
+template <typename T = void>
+struct RandomInsert {
+
+    static constexpr std::string_view name = "Random Insert";
+
+    static auto run() -> void
+    {
+        auto sizes = create_sizes(10'000uL);
+        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto sub_dir = fs::path { "random-insert" };
+
+        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto list_results = benchmark::run<std::list<T>, tests::RandomInsert, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::list");
+        szs_ftr.get();
+
+        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deque_results = benchmark::run<std::deque<T>, tests::RandomInsert, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::deque");
+        lst_ftr.get();
+
+        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto vec_results = benchmark::run<std::vector<T>, tests::RandomInsert, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::vector");
         deq_ftr.get();
 
         csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
@@ -142,6 +169,7 @@ auto all() -> void
 
     run_for_types<PushBack, Ts...>();
     run_for_types<LinearSearch, Ts...>();
+    run_for_types<RandomInsert, Ts...>();
 
     fmt::print(
         "{}\n",

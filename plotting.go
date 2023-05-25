@@ -14,6 +14,8 @@ import (
 	"gonum.org/v1/gonum/floats"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
+	"gonum.org/v1/plot/vg"
+	"gonum.org/v1/plot/vg/draw"
 )
 
 var COLOURS = []color.RGBA{
@@ -126,7 +128,10 @@ func plot_data(subDirName string, fileName string, data map[string][]float64) {
 			}
 
 			ysLine.Color = COLOURS[iter]
+			ysLine.Width = vg.Length(4)
 			ysPoints.Color = COLOURS[iter]
+			ysPoints.Radius = vg.Points(5)
+			ysPoints.Shape = draw.CircleGlyph{}
 
 			ysLogLine, ysLogPoints, err := plotter.NewLinePoints(ysLog)
 			if err != nil {
@@ -134,7 +139,10 @@ func plot_data(subDirName string, fileName string, data map[string][]float64) {
 			}
 
 			ysLogLine.Color = COLOURS[iter]
+			ysLogLine.Width = vg.Length(4)
 			ysLogPoints.Color = COLOURS[iter]
+			ysLogPoints.Radius = vg.Length(5)
+			ysLogPoints.Shape = draw.CircleGlyph{}
 
 			localMax := floats.Max(yData)
 			localMax = localMax + (0.1 * localMax)

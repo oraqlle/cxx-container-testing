@@ -1,9 +1,15 @@
 #ifndef CXX_CONTAINER_TESTING_TESTS
 #define CXX_CONTAINER_TESTING_TESTS
 
+#include <utils.hpp>
+
 #include <algorithm>
+#include <array>
+#include <numeric>
+#include <random>
 #include <ranges>
 #include <string_view>
+#include <utility>
 
 namespace tests {
 
@@ -35,6 +41,22 @@ struct LinearSearch {
         for (auto i { 0uL }; i < size; ++i)
             if (std::ranges::find_if(container, [&](auto x) { return x.a == i; }) != end(container))
                 counter += 1uL;
+    }
+
+}; // struct LinearSearch
+
+template <typename Container>
+struct RandomInsert {
+    using value_type = typename Container::value_type;
+
+    static constexpr std::array<value_type, 1000> values = utils::make_array<value_type>(std::make_integer_sequence<std::size_t, 1000uL> {});
+
+    inline static auto run(Container& container, std::size_t size) noexcept -> void
+    {
+        for (auto idx { 0uL }; idx < 1000uL; ++idx) {
+            auto it = std::ranges::find_if(container, [&](auto x) { return x.a == idx; });
+            container.insert(it, values[idx]);
+        }
     }
 
 }; // struct LinearSearch
