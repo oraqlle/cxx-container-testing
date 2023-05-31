@@ -10,6 +10,7 @@
 #include <ranges>
 #include <string_view>
 #include <utility>
+#include <vector>
 
 namespace tests {
 
@@ -28,6 +29,32 @@ struct PushBack {
     }
 
 }; // struct PushBack
+
+template <typename Container>
+struct PushFront {
+
+    using value_type = typename Container::value_type;
+
+    inline static auto run(Container& container, std::size_t size) noexcept -> void
+    {
+        for (auto i { 0uL }; i < size; ++i)
+            container.push_front(value_type {});
+    }
+
+}; // struct PushFront
+
+template <typename T>
+struct PushFront<std::vector<T>> {
+
+    using value_type = T;
+
+    inline static auto run(std::vector<T>& container, std::size_t size) noexcept -> void
+    {
+        for (auto i { 0uL }; i < size; ++i)
+            container.insert(begin(container), value_type {});
+    }
+
+}; // struct PushFront
 
 template <typename Container>
 struct LinearSearch {
@@ -75,7 +102,8 @@ template <typename Container>
 struct RandomRemove {
     inline static auto run(Container& container, std::size_t size) noexcept -> void
     {
-        container.erase(std::ranges::remove_if(container, [&](auto x) { return x.a < 1000uL; }));
+        auto [begin, end] = std::ranges::remove_if(container, [&](auto x) { return x.a < 1000uL; });
+        container.erase(begin, end);
     }
 
 }; // struct RandomRemove

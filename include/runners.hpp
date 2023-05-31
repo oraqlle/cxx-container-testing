@@ -70,6 +70,38 @@ struct PushBack {
 }; // struct PushBack
 
 template <typename T = void>
+struct PushFront {
+
+    static constexpr std::string_view name = "Push Front";
+
+    static auto run() -> void
+    {
+        auto sizes = create_sizes(100'000uL);
+        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto sub_dir = fs::path { "push-front" };
+
+        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+
+        auto list_results = benchmark::run<std::list<T>, tests::PushFront, makers::Empty, std::chrono::microseconds>(sizes, name, "std::list");
+        szs_ftr.get();
+        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+
+        auto deque_results = benchmark::run<std::deque<T>, tests::PushFront, makers::Empty, std::chrono::microseconds>(sizes, name, "std::deque");
+        lst_ftr.get();
+        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+
+        auto vec_results = benchmark::run<std::vector<T>, tests::PushFront, makers::Empty, std::chrono::microseconds>(sizes, name, "std::vector");
+        deq_ftr.get();
+        auto vec_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>()); });
+
+        auto pre_vec_results = benchmark::run<std::vector<T>, tests::PushFront, makers::Preallocated, std::chrono::microseconds>(sizes, name, "Preallocated std::vector");
+        vec_ftr.get();
+
+        csv::write(sub_dir, fname, "preallocated std::vector"s, pre_vec_results | to_count | ranges::to<std::vector<long double>>());
+    }
+}; // struct PushFront
+
+template <typename T = void>
 struct LinearSearch {
 
     static constexpr std::string_view name = "Linear Search";
@@ -148,7 +180,34 @@ struct RandomErase {
 
         csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
     }
-}; // struct RandomDelete
+}; // struct RandomErase
+
+template <typename T = void>
+struct RandomRemove {
+
+    static constexpr std::string_view name = "Random Remove";
+
+    static auto run() -> void
+    {
+        auto sizes = create_sizes(10'000uL);
+        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto sub_dir = fs::path { "random-remove" };
+
+        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto list_results = benchmark::run<std::list<T>, tests::RandomRemove, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::list");
+        szs_ftr.get();
+
+        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deque_results = benchmark::run<std::deque<T>, tests::RandomRemove, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::deque");
+        lst_ftr.get();
+
+        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto vec_results = benchmark::run<std::vector<T>, tests::RandomRemove, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::vector");
+        deq_ftr.get();
+
+        csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
+    }
+}; // struct RandomRemove
 
 template <template <typename> class Runner>
 auto run_for_types() -> void
@@ -195,8 +254,11 @@ auto all() -> void
             fmt::emphasis::bold | fmt::fg(fmt::color::gold)));
 
     run_for_types<PushBack, Ts...>();
+    run_for_types<PushFront, Ts...>();
     run_for_types<LinearSearch, Ts...>();
     run_for_types<RandomInsert, Ts...>();
+    run_for_types<RandomErase, Ts...>();
+    run_for_types<RandomRemove, Ts...>();
 
     fmt::print(
         "{}\n",
