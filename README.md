@@ -20,6 +20,8 @@ The tests include:
 - Push Front
 - Linear Search
 - Random Insert w/ Linear Search
+- Random Erase
+- Random Remove + Erase
 - Destruction
 - Sort
 - Incremental Sorted Insert
@@ -28,16 +30,18 @@ The results of the tests are store in the [`data/`](data/) directory. Graphs of 
 
 Currently, only the following containers are tested.
 
-- `std::vector`
-- `std::deque`
 - `std::list`
+- `std::deque`
+- `std::vector`
+- Preallocated `std::vector`
 
 ## Running Tests
 
 To run the tests simply run the following command in the root of the project. The results are stored as `*.csv` in the [`data/`](data/) directory. This directory is split first by the test type and then the sized element used for that test.
 
 ```sh
-poac run -r
+poac build -r
+./poac-out/release/cxx-container-testing --test=all
 ```
 
 ## Plot Results

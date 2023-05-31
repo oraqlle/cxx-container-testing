@@ -79,6 +79,8 @@
         "cfenv": "cpp",
         "valarray": "cpp",
         "source_location": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "any": "cpp",
+        "charconv": "cpp"
     }
 }

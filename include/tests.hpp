@@ -61,6 +61,25 @@ struct RandomInsert {
 
 }; // struct LinearSearch
 
+template <typename Container>
+struct RandomErase {
+    inline static auto run(Container& container, std::size_t size) noexcept -> void
+    {
+        for (auto idx { 0uL }; idx < 1000uL; ++idx)
+            container.erase(std::ranges::find_if(container, [&](auto x) { return x.a == idx; }));
+    }
+
+}; // struct RandomErase
+
+template <typename Container>
+struct RandomRemove {
+    inline static auto run(Container& container, std::size_t size) noexcept -> void
+    {
+        container.erase(std::ranges::remove_if(container, [&](auto x) { return x.a < 1000uL; }));
+    }
+
+}; // struct RandomRemove
+
 } // namespace test
 
 #endif // CXX_CONTAINER_TESTING_TESTS
