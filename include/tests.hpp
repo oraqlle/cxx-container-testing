@@ -5,6 +5,8 @@
 
 #include <algorithm>
 #include <array>
+#include <functional>
+#include <list>
 #include <numeric>
 #include <random>
 #include <ranges>
@@ -54,7 +56,7 @@ struct PushFront<std::vector<T>> {
             container.insert(begin(container), value_type {});
     }
 
-}; // struct PushFront
+}; // struct PushFront<std::vector<T>>
 
 template <typename Container>
 struct LinearSearch {
@@ -107,6 +109,33 @@ struct RandomRemove {
     }
 
 }; // struct RandomRemove
+
+template <typename Container>
+struct Sort {
+    inline static auto run(Container& container, std::size_t size) noexcept -> void
+    {
+        std::ranges::sort(container, std::less<> {});
+    }
+
+}; // struct Sort
+
+template <typename T>
+struct Sort<std::list<T>> {
+    inline static auto run(std::list<T>& container, std::size_t size) noexcept -> void
+    {
+        container.sort();
+    }
+
+}; // struct Sort<std::list<T>>
+
+template <typename Container>
+struct Destroy {
+    inline static auto run(Container& container, std::size_t size) noexcept -> void
+    {
+        container.erase(begin(container), end(container));
+    }
+
+}; // struct Destroy
 
 } // namespace test
 

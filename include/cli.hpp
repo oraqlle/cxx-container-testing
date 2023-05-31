@@ -90,6 +90,22 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
                 types::TrivialLargeType,
                 types::TrivialHugeType,
                 types::TrivialMonsterType>();
+        } else if (test_arg == "sort"sv) {
+            runners::run_for_types<
+                runners::Sort,
+                types::TrivialSmallType,
+                types::TrivialMediumType,
+                types::TrivialLargeType,
+                types::TrivialHugeType,
+                types::TrivialMonsterType>();
+        } else if (test_arg == "destroy"sv) {
+            runners::run_for_types<
+                runners::Destroy,
+                types::TrivialSmallType,
+                types::TrivialMediumType,
+                types::TrivialLargeType,
+                types::TrivialHugeType,
+                types::TrivialMonsterType>();
         } else {
             fmt::print("Invalid test selected.\n\nAvailable Tests:\n{}\n\n", fmt::join(test_names, "\n"sv));
         }
