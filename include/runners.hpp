@@ -263,6 +263,33 @@ struct Destroy {
     }
 }; // struct Destroy
 
+template <typename T = void>
+struct RandomSortedInsert {
+
+    static constexpr std::string_view name = "Random Sorted Insert";
+
+    static auto run() -> void
+    {
+        auto sizes = create_sizes(10'000uL);
+        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto sub_dir = fs::path { "random-sorted-insert" };
+
+        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto list_results = benchmark::run<std::list<T>, tests::RandomSortedInsert, makers::Empty, std::chrono::microseconds>(sizes, name, "std::list");
+        szs_ftr.get();
+
+        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deque_results = benchmark::run<std::deque<T>, tests::RandomSortedInsert, makers::Empty, std::chrono::microseconds>(sizes, name, "std::deque");
+        lst_ftr.get();
+
+        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto vec_results = benchmark::run<std::vector<T>, tests::RandomSortedInsert, makers::Empty, std::chrono::microseconds>(sizes, name, "std::vector");
+        deq_ftr.get();
+
+        csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
+    }
+}; // struct RandomSortedInsert
+
 template <template <typename> class Runner>
 auto run_for_types() -> void
 {
@@ -315,6 +342,7 @@ auto all() -> void
     run_for_types<RandomRemove, Ts...>();
     run_for_types<Sort, Ts...>();
     run_for_types<Destroy, Ts...>();
+    run_for_types<RandomSortedInsert, Ts...>();
 
     fmt::print(
         "{}\n",

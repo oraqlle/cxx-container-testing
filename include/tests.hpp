@@ -20,6 +20,14 @@ using std::ranges::begin;
 using std::ranges::end;
 
 template <typename Container>
+struct NoOp {
+    inline static auto run(Container& container, std::size_t size) noexcept -> void
+    {
+    }
+
+}; // struct NoOp
+
+template <typename Container>
 struct PushBack {
 
     using value_type = typename Container::value_type;
@@ -136,6 +144,28 @@ struct Destroy {
     }
 
 }; // struct Destroy
+
+template <typename Container>
+struct RandomSortedInsert {
+
+    static std::mt19937 gen;
+    static std::uniform_int_distribution<std::size_t> distrib;
+
+    inline static auto run(Container& container, std::size_t size) noexcept -> void
+    {
+        for (auto idx { 0uL }; idx < size; ++idx) {
+            auto v = distrib(gen);
+            container.insert(std::ranges::find_if(container, [&v](auto& x) { return x.a >= v; }), { v });
+        }
+    }
+
+}; // struct RandomSortedInsert
+
+template <typename Container>
+std::mt19937 RandomSortedInsert<Container>::gen = std::mt19937 { std::random_device {}() };
+
+template <typename Container>
+std::uniform_int_distribution<std::size_t> RandomSortedInsert<Container>::distrib { 0, std::numeric_limits<std::size_t>::max() - 1uL };
 
 } // namespace test
 
