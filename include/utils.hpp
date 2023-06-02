@@ -13,6 +13,12 @@ constexpr auto make_array(std::integer_sequence<std::size_t, Indices...>) noexce
     return { (static_cast<T>(Indices))... };
 }
 
+template <typename T>
+constexpr auto is_small() noexcept -> bool
+{
+    return sizeof(T) <= sizeof(std::size_t);
+}
+
 } // namespace utils
 
 #endif // CXX_CONTAINER_TESTING_UTILS

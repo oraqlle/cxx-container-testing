@@ -67,7 +67,7 @@ func make_plotter(xValues []float64, yValues []float64) (plotter.XYs, plotter.XY
 		y := xy.B
 
 		pts[i].Y = y
-		ptsLog[i].Y = y
+		ptsLog[i].Y = y + 1
 
 		pts[i].X = x
 		ptsLog[i].X = x
@@ -107,7 +107,7 @@ func plot_data(subDirName string, fileName string, data map[string][]float64) {
 
 	logPlot.Title.Text = subDirName + " - Log Scale"
 	logPlot.Title.TextStyle.Font.Size = 50.0
-	logPlot.Y.Label.Text = "log(μs)"
+	logPlot.Y.Label.Text = "log(μs + 1)"
 	logPlot.Y.Scale = plot.LogScale{}
 	logPlot.Y.Label.TextStyle.Font.Size = 30.0
 	logPlot.X.Label.Text = "Number of elements"

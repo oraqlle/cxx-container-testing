@@ -90,14 +90,13 @@ struct PushFront {
         lst_ftr.get();
         auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
 
-        auto vec_results = benchmark::run<std::vector<T>, tests::PushFront, makers::Empty, std::chrono::microseconds>(sizes, name, "std::vector");
-        deq_ftr.get();
-        auto vec_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>()); });
-
-        auto pre_vec_results = benchmark::run<std::vector<T>, tests::PushFront, makers::Preallocated, std::chrono::microseconds>(sizes, name, "Preallocated std::vector");
-        vec_ftr.get();
-
-        csv::write(sub_dir, fname, "preallocated std::vector"s, pre_vec_results | to_count | ranges::to<std::vector<long double>>());
+        if constexpr (utils::is_small<T>()) {
+            auto vec_results = benchmark::run<std::vector<T>, tests::PushFront, makers::Empty, std::chrono::microseconds>(sizes, name, "std::vector");
+            deq_ftr.get();
+            csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>());
+        } else {
+            deq_ftr.get();
+        }
     }
 }; // struct PushFront
 
@@ -270,7 +269,7 @@ struct RandomSortedInsert {
 
     static auto run() -> void
     {
-        auto sizes = create_sizes(10'000uL);
+        auto sizes = create_sizes(1'000uL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
         auto sub_dir = fs::path { "random-sorted-insert" };
 

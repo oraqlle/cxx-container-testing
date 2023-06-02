@@ -41,8 +41,8 @@
 <path d="M1890,55.371L1890,63.371" style="fill:none;stroke:#000000;stroke-width:0.5" />
 <path d="M145.46,63.371L1890,63.371" style="fill:none;stroke:#000000;stroke-width:0.5" />
 <g transform="rotate(90)">
-<text x="509.33" y="23.467" transform="scale(1, -1)"
-	style="font-family:Liberation Serif;font-variant:normal;font-weight:normal;font-style:normal;font-size:30px">log(μs)</text>
+<text x="485.87" y="23.467" transform="scale(1, -1)"
+	style="font-family:Liberation Serif;font-variant:normal;font-weight:normal;font-style:normal;font-size:30px">log(μs + 1)</text>
 </g>
 <text x="49.712" y="-434.13" transform="scale(1, -1)"
 	style="font-family:Liberation Serif;font-variant:normal;font-weight:normal;font-style:normal;font-size:20px">4000000</text>
@@ -80,12 +80,12 @@
 <path d="M1507.3,757.33A5,5 0 1 1 1497.3,757.33A5,5 0 1 1 1507.3,757.33Z" style="fill:#FF0000" />
 <path d="M1701.2,793.65A5,5 0 1 1 1691.2,793.65A5,5 0 1 1 1701.2,793.65Z" style="fill:#FF0000" />
 <path d="M1895,820.83A5,5 0 1 1 1885,820.83A5,5 0 1 1 1895,820.83Z" style="fill:#FF0000" />
-<path d="M145.46,199.03L339.3,436.41L533.14,569.02L726.97,671.96L920.81,743.12L1114.6,801.56L1308.5,851.06L1502.3,892.54L1696.2,934.17L1890,951.88" style="fill:none;stroke:#0000FF;stroke-width:4" />
+<path d="M145.46,199.03L339.3,436.41L533.14,569.02L726.97,671.96L920.81,743.11L1114.6,801.56L1308.5,851.06L1502.3,892.54L1696.2,934.17L1890,951.88" style="fill:none;stroke:#0000FF;stroke-width:4" />
 <path d="M150.46,199.03A5,5 0 1 1 140.46,199.03A5,5 0 1 1 150.46,199.03Z" style="fill:#0000FF" />
 <path d="M344.3,436.41A5,5 0 1 1 334.3,436.41A5,5 0 1 1 344.3,436.41Z" style="fill:#0000FF" />
 <path d="M538.14,569.02A5,5 0 1 1 528.14,569.02A5,5 0 1 1 538.14,569.02Z" style="fill:#0000FF" />
 <path d="M731.97,671.96A5,5 0 1 1 721.97,671.96A5,5 0 1 1 731.97,671.96Z" style="fill:#0000FF" />
-<path d="M925.81,743.12A5,5 0 1 1 915.81,743.12A5,5 0 1 1 925.81,743.12Z" style="fill:#0000FF" />
+<path d="M925.81,743.11A5,5 0 1 1 915.81,743.11A5,5 0 1 1 925.81,743.11Z" style="fill:#0000FF" />
 <path d="M1119.6,801.56A5,5 0 1 1 1109.6,801.56A5,5 0 1 1 1119.6,801.56Z" style="fill:#0000FF" />
 <path d="M1313.5,851.06A5,5 0 1 1 1303.5,851.06A5,5 0 1 1 1313.5,851.06Z" style="fill:#0000FF" />
 <path d="M1507.3,892.54A5,5 0 1 1 1497.3,892.54A5,5 0 1 1 1507.3,892.54Z" style="fill:#0000FF" />
