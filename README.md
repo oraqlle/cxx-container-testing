@@ -33,6 +33,19 @@ Currently, only the following containers are tested.
 - `std::vector`
 - Preallocated `std::vector`
 
+Currently, only the following kinds of element types are tested with.
+
+- Trivial [Sized Types]
+  - 8 bytes
+  - 64 bytes
+  - 128 bytes
+  - 1024 bytes
+  - 4096 bytes
+- Non Trivial and Movable
+- Non Trivial, Movable and `noexcept`
+- Non Trivial and Non Movable
+- Non Trivial and Expensive to Copy and Move [32 bytes]
+
 ## Running Tests
 
 To run the tests simply run the following command in the root of the project. The results are stored as `*.csv` in the [`data/`](data/) directory. This directory is split first by the test type and then the sized element used for that test.

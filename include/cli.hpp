@@ -39,7 +39,10 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
                 types::TrivialMediumType,
                 types::TrivialLargeType,
                 types::TrivialHugeType,
-                types::TrivialMonsterType>();
+                types::TrivialMonsterType,
+                types::NonTrivialMovable,
+                types::NonTrivialMovableNoexcept,
+                types::NonTrivialMedium>();
 
             break;
         } else if (test_arg == "push-back") {
@@ -49,7 +52,10 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
                 types::TrivialMediumType,
                 types::TrivialLargeType,
                 types::TrivialHugeType,
-                types::TrivialMonsterType>();
+                types::TrivialMonsterType,
+                types::NonTrivialMovable,
+                types::NonTrivialMovableNoexcept,
+                types::NonTrivialMedium>();
         } else if (test_arg == "push-front") {
             runners::run_for_types<
                 runners::PushFront,
@@ -57,7 +63,10 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
                 types::TrivialMediumType,
                 types::TrivialLargeType,
                 types::TrivialHugeType,
-                types::TrivialMonsterType>();
+                types::TrivialMonsterType,
+                types::NonTrivialMovable,
+                types::NonTrivialMovableNoexcept,
+                types::NonTrivialMedium>();
         } else if (test_arg == "linear-search"sv) {
             runners::run_for_types<
                 runners::LinearSearch,
@@ -65,7 +74,10 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
                 types::TrivialMediumType,
                 types::TrivialLargeType,
                 types::TrivialHugeType,
-                types::TrivialMonsterType>();
+                types::TrivialMonsterType,
+                types::NonTrivialMovable,
+                types::NonTrivialMovableNoexcept,
+                types::NonTrivialMedium>();
         } else if (test_arg == "random-insert"sv) {
             runners::run_for_types<
                 runners::RandomInsert,
@@ -73,7 +85,10 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
                 types::TrivialMediumType,
                 types::TrivialLargeType,
                 types::TrivialHugeType,
-                types::TrivialMonsterType>();
+                types::TrivialMonsterType,
+                types::NonTrivialMovable,
+                types::NonTrivialMovableNoexcept,
+                types::NonTrivialMedium>();
         } else if (test_arg == "random-erase"sv) {
             runners::run_for_types<
                 runners::RandomErase,
@@ -81,7 +96,10 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
                 types::TrivialMediumType,
                 types::TrivialLargeType,
                 types::TrivialHugeType,
-                types::TrivialMonsterType>();
+                types::TrivialMonsterType,
+                types::NonTrivialMovable,
+                types::NonTrivialMovableNoexcept,
+                types::NonTrivialMedium>();
         } else if (test_arg == "random-remove"sv) {
             runners::run_for_types<
                 runners::RandomRemove,
@@ -89,7 +107,10 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
                 types::TrivialMediumType,
                 types::TrivialLargeType,
                 types::TrivialHugeType,
-                types::TrivialMonsterType>();
+                types::TrivialMonsterType,
+                types::NonTrivialMovable,
+                types::NonTrivialMovableNoexcept,
+                types::NonTrivialMedium>();
         } else if (test_arg == "sort"sv) {
             runners::run_for_types<
                 runners::Sort,
@@ -97,7 +118,10 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
                 types::TrivialMediumType,
                 types::TrivialLargeType,
                 types::TrivialHugeType,
-                types::TrivialMonsterType>();
+                types::TrivialMonsterType,
+                types::NonTrivialMovable,
+                types::NonTrivialMovableNoexcept,
+                types::NonTrivialMedium>();
         } else if (test_arg == "destroy"sv) {
             runners::run_for_types<
                 runners::Destroy,
@@ -105,15 +129,21 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
                 types::TrivialMediumType,
                 types::TrivialLargeType,
                 types::TrivialHugeType,
-                types::TrivialMonsterType>();
+                types::TrivialMonsterType,
+                types::NonTrivialMovable,
+                types::NonTrivialMovableNoexcept,
+                types::NonTrivialMedium>();
         } else if (test_arg == "random-sorted-insert"sv) {
             runners::run_for_types<
                 runners::RandomSortedInsert,
-                types::TrivialSmallType,
-                types::TrivialMediumType,
-                types::TrivialLargeType,
-                types::TrivialHugeType,
-                types::TrivialMonsterType>();
+                // types::TrivialSmallType,
+                // types::TrivialMediumType,
+                // types::TrivialLargeType,
+                // types::TrivialHugeType,
+                // types::TrivialMonsterType,
+                // types::NonTrivialMovable,
+                types::NonTrivialMovableNoexcept,
+                types::NonTrivialMedium>();
         } else {
             fmt::print("Invalid test selected: {}.\n\nAvailable Tests:\n{}\n\n", test_arg, fmt::join(test_names, "\n"sv));
         }

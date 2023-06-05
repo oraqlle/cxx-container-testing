@@ -86,13 +86,13 @@ template <typename Container>
 struct RandomInsert {
     using value_type = typename Container::value_type;
 
-    static constexpr std::array<value_type, 1000> values = utils::make_array<value_type>(std::make_integer_sequence<std::size_t, 1000uL> {});
+    static constexpr std::array<std::size_t, 1000> values = utils::make_array<std::size_t>(std::make_integer_sequence<std::size_t, 1000uL> {});
 
     inline static auto run(Container& container, std::size_t size) noexcept -> void
     {
         for (auto idx { 0uL }; idx < 1000uL; ++idx) {
             auto it = std::ranges::find_if(container, [&](auto x) { return x.a == idx; });
-            container.insert(it, values[idx]);
+            container.insert(it, value_type { values[idx] });
         }
     }
 

@@ -269,7 +269,7 @@ struct RandomSortedInsert {
 
     static auto run() -> void
     {
-        auto sizes = create_sizes(1'000uL);
+        auto sizes = create_sizes(10'000uL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
         auto sub_dir = fs::path { "random-sorted-insert" };
 
