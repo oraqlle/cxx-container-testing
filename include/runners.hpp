@@ -30,7 +30,7 @@ using namespace std::literals;
 
 auto to_count = std::views::transform([](auto x) { return x.count(); });
 
-auto create_sizes = [](std::size_t scale) -> std::vector<std::size_t> {
+auto create_sizes = [](std::size_t scale) noexcept -> std::vector<std::size_t> {
     return std::views::iota(1)
         | std::views::transform([&](auto x) { return x * scale; })
         | std::views::take(10)

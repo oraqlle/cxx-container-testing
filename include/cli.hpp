@@ -136,12 +136,12 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
         } else if (test_arg == "random-sorted-insert"sv) {
             runners::run_for_types<
                 runners::RandomSortedInsert,
-                // types::TrivialSmallType,
-                // types::TrivialMediumType,
-                // types::TrivialLargeType,
-                // types::TrivialHugeType,
-                // types::TrivialMonsterType,
-                // types::NonTrivialMovable,
+                types::TrivialSmallType,
+                types::TrivialMediumType,
+                types::TrivialLargeType,
+                types::TrivialHugeType,
+                types::TrivialMonsterType,
+                types::NonTrivialMovable,
                 types::NonTrivialMovableNoexcept,
                 types::NonTrivialMedium>();
         } else {

@@ -15,13 +15,13 @@ template <std::size_t N>
 struct Trivial {
     std::size_t a;
     std::array<unsigned char, N - sizeof(a)> b;
-    auto operator<(const Trivial& other) const noexcept -> bool { return a < other.a; }
+    [[nodiscard]] auto operator<(const Trivial& other) const noexcept -> bool { return a < other.a; }
 }; // struct Trivial
 
 template <>
 struct Trivial<sizeof(std::size_t)> {
     std::size_t a;
-    auto operator<(const Trivial& other) const noexcept -> bool { return a < other.a; }
+    [[nodiscard]] auto operator<(const Trivial& other) const noexcept -> bool { return a < other.a; }
 }; // struct Trivial<sizeof(std::size_t)>
 
 using TrivialSmallType = types::Trivial<8>;
@@ -41,7 +41,7 @@ public:
 
     ~NonTrivialMovable() = default;
 
-    auto operator<(const NonTrivialMovable& other) const -> bool
+    [[nodiscard]] auto operator<(const NonTrivialMovable& other) const -> bool
     {
         return a < other.a;
     }
@@ -67,10 +67,10 @@ public:
 
     ~NonTrivialMovableNoexcept() noexcept = default;
 
-    auto operator=(const NonTrivialMovableNoexcept& other) noexcept
+    [[nodiscard]] auto operator=(const NonTrivialMovableNoexcept& other) noexcept
         -> NonTrivialMovableNoexcept& = default;
 
-    auto operator=(NonTrivialMovableNoexcept&& other) noexcept
+    [[nodiscard]] auto operator=(NonTrivialMovableNoexcept&& other) noexcept
         -> NonTrivialMovableNoexcept&
     {
         std::swap(data, other.data);
@@ -79,7 +79,7 @@ public:
         return *this;
     }
 
-    auto operator<(const NonTrivialMovableNoexcept& other) const noexcept -> bool
+    [[nodiscard]] auto operator<(const NonTrivialMovableNoexcept& other) const noexcept -> bool
     {
         return a < other.a;
     }
@@ -103,7 +103,7 @@ public:
 
     ~NonTrivial() = default;
 
-    auto operator<(const NonTrivial& other) const noexcept -> bool
+    [[nodiscard]] auto operator<(const NonTrivial& other) const noexcept -> bool
     {
         return a < other.a;
     }
@@ -118,7 +118,7 @@ private:
 using NonTrivialMedium = NonTrivial<32>;
 
 template <typename T>
-constexpr auto name() noexcept
+[[nodiscard]] constexpr auto name() noexcept
     -> std::string_view
 {
     if constexpr (std::is_same_v<T, TrivialSmallType>)

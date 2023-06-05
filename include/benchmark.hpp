@@ -23,7 +23,7 @@ template <
     typename Duration,
     std::size_t Repeats = 7,
     std::ranges::input_range Sizes>
-inline auto run(Sizes sizes, std::string_view test_name, std::string_view container_name) noexcept
+[[nodiscard]] inline auto run(Sizes sizes, std::string_view test_name, std::string_view container_name) noexcept
     -> std::vector<Duration>
 {
     fmt::print(

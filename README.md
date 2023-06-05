@@ -8,7 +8,10 @@ A simple program that runs a series of tests on C++ standard containers. The tes
   - [Contents](#contents)
   - [Tests](#tests)
   - [Running Tests](#running-tests)
+    - [Listing Tests](#listing-tests)
+    - [Selecting Tests](#selecting-tests)
   - [Plot Results](#plot-results)
+  - [Acknowledgments](#acknowledgments)
 
 ## Tests
 
@@ -55,6 +58,26 @@ poac build -r
 ./poac-out/release/cxx-container-testing --test=all
 ```
 
+### Listing Tests
+
+The available tests can be listed using the `--list` flag.
+
+```sh
+./poac-out/release/cxx-container-testing --list
+```
+
+### Selecting Tests
+
+A specific test can be run using the `--test=<test-name>`. Multiple tests can be selected by repeating the `--test` flag.
+
+```sh
+# Run only `push-back` test
+./poac-out/release/cxx-container-testing --test=push-back
+
+# Run only `push-front` and `destroy` tests
+./poac-out/release/cxx-container-testing --test=push-front --test=destroy
+```
+
 ## Plot Results
 
 To plot the results a small Go package has been included that is used to plot the results as `*.svg` into the [`imgs/`](imgs/) directory. The [`imgs/`](imgs/) directory mirrors the structure of the `data/` directory.
@@ -63,3 +86,7 @@ To plot the results a small Go package has been included that is used to plot th
 go build -o bin/plotter
 bin/plotter
 ```
+
+## Acknowledgments
+
+Inspired by [C++ benchmark – std::vector VS std::list VS std::deque - Baptiste Wicht](https://baptiste-wicht.com/posts/2012/12/cpp-benchmark-vector-list-deque.html)
