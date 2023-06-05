@@ -184,13 +184,23 @@ func plot_data(subDirName string, fileName string, data map[string][]float64) {
 		}
 	}
 
-	savePathLinear := filepath.Join(subPath, fileName) + ".svg"
-	if err := linearPlot.Save(1920, 1080, savePathLinear); err != nil {
+	savePathLinear := filepath.Join(subPath, fileName)
+
+	if err := linearPlot.Save(1920, 1080, savePathLinear+".png"); err != nil {
 		log.Panic(err)
 	}
 
-	savePathLog := filepath.Join(subPath, fileName) + "Log.svg"
-	if err := logPlot.Save(1920, 1080, savePathLog); err != nil {
+	if err := linearPlot.Save(1920, 1080, savePathLinear+".svg"); err != nil {
+		log.Panic(err)
+	}
+
+	savePathLog := filepath.Join(subPath, fileName) + "Log"
+
+	if err := logPlot.Save(1920, 1080, savePathLog+".png"); err != nil {
+		log.Panic(err)
+	}
+
+	if err := logPlot.Save(1920, 1080, savePathLog+".svg"); err != nil {
 		log.Panic(err)
 	}
 }
