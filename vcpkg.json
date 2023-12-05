@@ -1,0 +1,12 @@
+{
+    "name": "cxx-container-testing",
+    "version-semver": "0.2.0",
+    "dependencies": [
+        "fmt",
+        "rapidcsv",
+        "argparse",
+        "range-v3"
+    ],
+    "default-features": [],
+    "builtin-baseline": "962e5e39f8a25f42522f51fffc574e05a3efd26b"
+}

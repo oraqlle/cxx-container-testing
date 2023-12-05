@@ -54,8 +54,9 @@ Currently, only the following kinds of element types are tested with.
 To run the tests simply run the following command in the root of the project. The results are stored as `*.csv` in the [`data/`](data/) directory. This directory is split first by the test type and then the sized element used for that test.
 
 ```sh
-poac build -r
-./poac-out/release/cxx-container-testing --test=all
+cmake --preset=<linux|windows|macos>
+cmake --build --preset=<linux|windows|macos>
+./build/<linux|windows|macos>/release/cxx-container-testing --test=all
 ```
 
 ### Listing Tests
@@ -63,7 +64,7 @@ poac build -r
 The available tests can be listed using the `--list` flag.
 
 ```sh
-./poac-out/release/cxx-container-testing --list
+./build/<linux|windows|macos>/release/cxx-container-testing --list
 ```
 
 ### Selecting Tests
@@ -72,10 +73,10 @@ A specific test can be run using the `--test=<test-name>`. Multiple tests can be
 
 ```sh
 # Run only `push-back` test
-./poac-out/release/cxx-container-testing --test=push-back
+./build/<linux|windows|macos>/release/cxx-container-testing --test=push-back
 
 # Run only `push-front` and `destroy` tests
-./poac-out/release/cxx-container-testing --test=push-front --test=destroy
+./build/<linux|windows|macos>/release/cxx-container-testing --test=push-front --test=destroy
 ```
 
 ## Plot Results
@@ -89,4 +90,4 @@ bin/plotter
 
 ## Acknowledgments
 
-Inspired by [C++ benchmark – std::vector VS std::list VS std::deque - Baptiste Wicht](https://baptiste-wicht.com/posts/2012/12/cpp-benchmark-vector-list-deque.html)
+Inspired by [C++ benchmark - std::vector VS std::list VS std::deque - Baptiste Wicht](https://baptiste-wicht.com/posts/2012/12/cpp-benchmark-vector-list-deque.html)
