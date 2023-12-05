@@ -44,7 +44,7 @@ template <
     for (auto size : sizes) {
         auto duration = Duration {};
 
-        for (auto i { 0uL }; i < Repeats; ++i) {
+        for (auto i { 0UL }; i < Repeats; ++i) {
             auto container = Maker<Container>::make(size);
             auto start = clock_type::now();
             Tester<Container>::run(container, size);
@@ -56,7 +56,7 @@ template <
     }
 
     Maker<Container>::clean();
-    std::ranges::transform(results, results.begin(), [](auto x) { return x / Repeats; });
+    std::ranges::transform(results, results.begin(), [](auto duration) { return duration / Repeats; });
 
     fmt::print(
         "    {} {}\n        {} {}\n",

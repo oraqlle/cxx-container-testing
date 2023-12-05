@@ -12,7 +12,7 @@
 
 using namespace std::literals;
 
-int main(int argc, char* argv[])
+auto main(int argc, char* argv[]) -> int
 {
     auto program = argparse::ArgumentParser { "cxx-container-testing", "v0.1.0" };
 
@@ -42,8 +42,9 @@ int main(int argc, char* argv[])
 
     auto tests = program.get<std::vector<std::string>>("--test");
 
-    if (tests.empty())
+    if (tests.empty()) {
         tests.push_back("all"s);
+    }
 
     cli::run_tests(tests);
     std::exit(0);

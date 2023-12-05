@@ -32,7 +32,7 @@ constexpr std::array<std::string_view, 10> test_names = {
 
 auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
 {
-    for (auto& test_arg : test_args) {
+    for (const auto& test_arg : test_args) {
         if (test_arg == "all"sv) {
             runners::all<
                 types::TrivialSmallType,
@@ -45,7 +45,8 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
                 types::NonTrivialMedium>();
 
             break;
-        } else if (test_arg == "push-back") {
+        }
+        if (test_arg == "push-back") {
             runners::run_for_types<
                 runners::PushBack,
                 types::TrivialSmallType,

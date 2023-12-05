@@ -28,11 +28,11 @@ namespace runners {
 namespace fs = std::filesystem;
 using namespace std::literals;
 
-auto to_count = std::views::transform([](auto x) { return x.count(); });
+constexpr auto to_count = std::views::transform([](const auto duration) { return duration.count(); });
 
-auto create_sizes = [](std::size_t scale) noexcept -> std::vector<std::size_t> {
-    return std::views::iota(1)
-        | std::views::transform([&](auto x) { return x * scale; })
+const auto create_sizes = [](std::size_t scale) noexcept {
+    return std::views::iota(1UL)
+        | std::views::transform([&scale](auto base) { return base * scale; })
         | std::views::take(10)
         | ranges::to<std::vector<std::size_t>>();
 };
@@ -44,7 +44,7 @@ struct PushBack {
 
     static auto run() -> void
     {
-        auto sizes = create_sizes(100'000uL);
+        auto sizes = create_sizes(100'000UL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
         auto sub_dir = fs::path { "push-back" };
 
@@ -76,7 +76,7 @@ struct PushFront {
 
     static auto run() -> void
     {
-        auto sizes = create_sizes(100'000uL);
+        auto sizes = create_sizes(100'000UL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
         auto sub_dir = fs::path { "push-front" };
 
@@ -107,7 +107,7 @@ struct LinearSearch {
 
     static auto run() -> void
     {
-        auto sizes = create_sizes(1'000uL);
+        auto sizes = create_sizes(1'000UL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
         auto sub_dir = fs::path { "linear-search" };
 
@@ -134,7 +134,7 @@ struct RandomInsert {
 
     static auto run() -> void
     {
-        auto sizes = create_sizes(10'000uL);
+        auto sizes = create_sizes(10'000UL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
         auto sub_dir = fs::path { "random-insert" };
 
@@ -161,7 +161,7 @@ struct RandomErase {
 
     static auto run() -> void
     {
-        auto sizes = create_sizes(10'000uL);
+        auto sizes = create_sizes(10'000UL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
         auto sub_dir = fs::path { "random-erase" };
 
@@ -188,7 +188,7 @@ struct RandomRemove {
 
     static auto run() -> void
     {
-        auto sizes = create_sizes(10'000uL);
+        auto sizes = create_sizes(10'000UL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
         auto sub_dir = fs::path { "random-remove" };
 
@@ -215,7 +215,7 @@ struct Sort {
 
     static auto run() -> void
     {
-        auto sizes = create_sizes(10'000uL);
+        auto sizes = create_sizes(10'000UL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
         auto sub_dir = fs::path { "sort" };
 
@@ -242,7 +242,7 @@ struct Destroy {
 
     static auto run() -> void
     {
-        auto sizes = create_sizes(100'000uL);
+        auto sizes = create_sizes(100'000UL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
         auto sub_dir = fs::path { "destroy" };
 
@@ -269,7 +269,7 @@ struct RandomSortedInsert {
 
     static auto run() -> void
     {
-        auto sizes = create_sizes(10'000uL);
+        auto sizes = create_sizes(10'000UL);
         auto fname = ""s.append(types::name<T>()) + ".csv"s;
         auto sub_dir = fs::path { "random-sorted-insert" };
 

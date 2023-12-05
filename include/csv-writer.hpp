@@ -28,11 +28,11 @@ using namespace std::literals;
 
 template <typename T>
 auto write(
-    fs::path sub_dir,
-    std::string fname,
-    std::string column_name,
+    const fs::path& sub_dir,
+    const std::string& fname,
+    const std::string& column_name,
     const std::vector<T>& data,
-    const std::source_location src_loc = std::source_location::current()) -> void
+    [[maybe_unused]] const std::source_location src_loc = std::source_location::current()) -> void
 {
     fmt::print(
         "    {}\n        {} {}\n        {} {}\n        {} {}\n",
@@ -50,7 +50,7 @@ auto write(
         fmt::styled(
             "[ Element Type ]:",
             fmt::emphasis::bold | fmt::fg(fmt::color::teal)),
-        fname.substr(0uL, fname.size() - 4));
+        fname.substr(0UL, fname.size() - 4));
 
     auto data_path = src_absolute_path().parent_path() / ".."sv / "data"sv;
     auto sub_data_path = data_path / sub_dir;
@@ -75,15 +75,13 @@ auto write(
 
     auto doc = rapidcsv::Document { file_path };
 
-    auto idx = doc.GetColumnIdx(column_name);
-
-    if (idx < 0) {
+    if (auto idx = doc.GetColumnIdx(column_name); idx < 0) {
         auto size = doc.GetColumnCount();
         size = size == 0 ? 1 : size;
         doc.InsertColumn(size - 1, data, column_name);
     } else {
-        doc.SetColumn(idx, data);
-        doc.SetColumnName(idx, column_name);
+        doc.SetColumn(static_cast<std::size_t>(idx), data);
+        doc.SetColumnName(static_cast<std::size_t>(idx), column_name);
     }
 
     doc.Save();
@@ -104,7 +102,7 @@ auto write(
         fmt::styled(
             "[ Element Type ]:",
             fmt::emphasis::bold | fmt::fg(fmt::color::teal)),
-        fname.substr(0uL, fname.size() - 4));
+        fname.substr(0UL, fname.size() - 4));
 }
 
 } // namespace csv

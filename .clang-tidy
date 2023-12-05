@@ -12,17 +12,9 @@ Checks: "*,\
   -llvmlibc-*,\
   -modernize-use-nodiscard,\
   -misc-non-private-member-variables-in-classes,\
-  -misc-no-recursion,\
-  -clang-diagnostic-gnu-zero-variadic-macro-arguments,\
-  -android-cloexec-fopen,\
-  -cert-err33-c,\
-  -hicpp-deprecated-headers,\
-  -modernize-deprecated-headers,\
-  -modernize-use-using,\
-  -modernize-use-trailing-return-type,\
-  -cppcoreguidelines-*,\
-  -clang-diagnostic-unused-parameter,\
-  -misc-unused-parameters"
+  -readability-identifier-naming,\
+  -cppcoreguidelines-avoid-magic-numbers,\
+  -readability-magic-numbers"
 WarningsAsErrors: ""
 CheckOptions:
   - key: "bugprone-argument-comment.StrictMode"
@@ -82,9 +74,9 @@ CheckOptions:
   - key: "readability-identifier-naming.ConstexprVariableCase"
     value: "lower_case"
   - key: "readability-identifier-naming.EnumCase"
-    value: "UPPER_CASE"
+    value: "lower_case"
   - key: "readability-identifier-naming.EnumConstantCase"
-    value: "UPPER_CASE"
+    value: "lower_case"
   - key: "readability-identifier-naming.FunctionCase"
     value: "lower_case"
   - key: "readability-identifier-naming.GlobalConstantCase"
