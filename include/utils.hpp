@@ -7,7 +7,7 @@
 namespace utils {
 
 template <typename T, std::size_t... Indices>
-[[nodiscard]] constexpr auto make_array(std::integer_sequence<std::size_t, Indices...>) noexcept
+[[nodiscard]] constexpr auto make_array([[maybe_unused]] std::integer_sequence<std::size_t, Indices...> unused) noexcept
     -> std::array<T, sizeof...(Indices)>
 {
     return { (static_cast<T>(Indices))... };

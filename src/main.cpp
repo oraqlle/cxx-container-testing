@@ -32,12 +32,12 @@ auto main(int argc, char* argv[]) -> int
     } catch (const std::runtime_error& err) {
         std::cerr << err.what() << std::endl;
         std::cerr << program;
-        std::exit(1);
+        std::exit(1); // NOLINT(concurrency-mt-unsafe)
     }
 
     if (program["--list"] == true) {
         cli::list_tests();
-        std::exit(0);
+        std::exit(0); // NOLINT(concurrency-mt-unsafe)
     }
 
     auto tests = program.get<std::vector<std::string>>("--test");
@@ -47,7 +47,7 @@ auto main(int argc, char* argv[]) -> int
     }
 
     cli::run_tests(tests);
-    std::exit(0);
+    std::exit(0); // NOLINT(concurrency-mt-unsafe)
 
     return 0;
 }

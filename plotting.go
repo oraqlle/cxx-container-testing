@@ -27,7 +27,7 @@ var COLOURS = []color.RGBA{
 	{R: 255, B: 127, A: 255},
 }
 
-func root_path() string {
+func RootPath() string {
 
 	ex, err := os.Executable()
 	if err != nil {
@@ -37,7 +37,7 @@ func root_path() string {
 	return filepath.Join(filepath.Dir(ex), "..")
 }
 
-func reconstruct_data(input []map[string]string) map[string][]float64 {
+func ReconstructData(input []map[string]string) map[string][]float64 {
 	output := make(map[string][]float64)
 
 	for _, subMap := range input {
@@ -57,7 +57,7 @@ func reconstruct_data(input []map[string]string) map[string][]float64 {
 	return output
 }
 
-func make_plotter(xValues []float64, yValues []float64) (plotter.XYs, plotter.XYs) {
+func MakePlotter(xValues []float64, yValues []float64) (plotter.XYs, plotter.XYs) {
 	pts := make(plotter.XYs, len(xValues))
 	ptsLog := make(plotter.XYs, len(xValues))
 
@@ -77,7 +77,7 @@ func make_plotter(xValues []float64, yValues []float64) (plotter.XYs, plotter.XY
 	return pts, ptsLog
 }
 
-func make_x_axis(scale []float64) plot.ConstantTicks {
+func MakeXAxis(scale []float64) plot.ConstantTicks {
 	ticks := make([]plot.Tick, len(scale))
 
 	for i, value := range scale {
@@ -88,13 +88,13 @@ func make_x_axis(scale []float64) plot.ConstantTicks {
 	return plot.ConstantTicks(ticks)
 }
 
-func plot_data(subDirName string, fileName string, data map[string][]float64) {
+func PlotData(subDirName string, fileName string, data map[string][]float64) {
 
 	linearPlot := plot.New()
 	logPlot := plot.New()
 
 	nElements := data["elements"]
-	xaxis := make_x_axis(nElements)
+	xaxis := MakeXAxis(nElements)
 
 	linearPlot.Title.Text = subDirName
 	linearPlot.Title.TextStyle.Font.Size = 50.0
@@ -120,7 +120,7 @@ func plot_data(subDirName string, fileName string, data map[string][]float64) {
 
 	for key, yData := range data {
 		if key != "elements" {
-			ys, ysLog := make_plotter(nElements, yData)
+			ys, ysLog := MakePlotter(nElements, yData)
 
 			ysLine, ysPoints, err := plotter.NewLinePoints(ys)
 			if err != nil {
@@ -168,7 +168,7 @@ func plot_data(subDirName string, fileName string, data map[string][]float64) {
 	logPlot.Y.Tick.Label.Font.Size = 20.0
 	logPlot.Y.Max = max
 
-	rootPath := root_path()
+	rootPath := RootPath()
 
 	imgsPath := filepath.Join(rootPath, "imgs")
 	if _, err := os.Stat(imgsPath); os.IsNotExist(err) {
@@ -205,7 +205,7 @@ func plot_data(subDirName string, fileName string, data map[string][]float64) {
 	}
 }
 
-func plot_csv(filePath string) {
+func PlotCSV(filePath string) {
 
 	csvFile, err := os.Open(filePath)
 	if err != nil {
@@ -218,34 +218,34 @@ func plot_csv(filePath string) {
 	}
 	defer csvFile.Close()
 
-	data := reconstruct_data(csvData)
+	data := ReconstructData(csvData)
 
 	fileName := filepath.Base(filePath)[:len(filepath.Base(filePath))-4]
 	sliceLen := len(filePath) - len(fileName) - 5
 	subDir := filepath.Base(filePath[:sliceLen])
-	plot_data(subDir, fileName, data)
+	PlotData(subDir, fileName, data)
 }
 
-func walk(str string, dirEntry fs.DirEntry, err error) error {
+func Walk(str string, dirEntry fs.DirEntry, err error) error {
 	if err != nil {
 		return err
 	}
 
 	if !dirEntry.IsDir() {
 		if filepath.Ext(str) == ".csv" {
-			plot_csv(str)
+			PlotCSV(str)
 		}
 	}
 
 	return nil
 }
 
-func main() {
+func Main() {
 
-	dataPath := filepath.Join(root_path(), "data")
+	dataPath := filepath.Join(RootPath(), "data")
 	if _, err := os.Stat(dataPath); os.IsNotExist(err) {
 		log.Fatal(err)
 	}
 
-	filepath.WalkDir(dataPath, walk)
+	filepath.WalkDir(dataPath, Walk)
 }

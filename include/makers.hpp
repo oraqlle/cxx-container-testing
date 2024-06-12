@@ -1,6 +1,7 @@
 #ifndef CXX_CONTAINER_TESTING_MAKERS
 #define CXX_CONTAINER_TESTING_MAKERS
 
+#include <algorithm>
 #include <numeric>
 #include <random>
 #include <ranges>

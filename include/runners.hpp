@@ -45,22 +45,22 @@ struct PushBack {
     static auto run() -> void
     {
         auto sizes = create_sizes(100'000UL);
-        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto fname = fmt::format("{}.csv", types::name<T>());
         auto sub_dir = fs::path { "push-back" };
 
-        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto szs_ftr = std::async(std::launch::async, [&sub_dir, &fname, &sizes]() { csv::write(sub_dir, fname, "elements"s, sizes); });
 
         auto list_results = benchmark::run<std::list<T>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes, name, "std::list");
         szs_ftr.get();
-        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto lst_ftr = std::async(std::launch::async, [&sub_dir, &fname, &list_results]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
 
         auto deque_results = benchmark::run<std::deque<T>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes, name, "std::deque");
         lst_ftr.get();
-        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deq_ftr = std::async(std::launch::async, [&sub_dir, &fname, &deque_results]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
 
         auto vec_results = benchmark::run<std::vector<T>, tests::PushBack, makers::Empty, std::chrono::microseconds>(sizes, name, "std::vector");
         deq_ftr.get();
-        auto vec_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto vec_ftr = std::async(std::launch::async, [&sub_dir, &fname, &vec_results]() { csv::write(sub_dir, fname, "std::vector"s, vec_results | to_count | ranges::to<std::vector<long double>>()); });
 
         auto pre_vec_results = benchmark::run<std::vector<T>, tests::PushBack, makers::Preallocated, std::chrono::microseconds>(sizes, name, "Preallocated std::vector");
         vec_ftr.get();
@@ -77,18 +77,18 @@ struct PushFront {
     static auto run() -> void
     {
         auto sizes = create_sizes(100'000UL);
-        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto fname = fmt::format("{}.csv", types::name<T>());
         auto sub_dir = fs::path { "push-front" };
 
-        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto szs_ftr = std::async(std::launch::async, [&sub_dir, &fname, &sizes]() { csv::write(sub_dir, fname, "elements"s, sizes); });
 
         auto list_results = benchmark::run<std::list<T>, tests::PushFront, makers::Empty, std::chrono::microseconds>(sizes, name, "std::list");
         szs_ftr.get();
-        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto lst_ftr = std::async(std::launch::async, [&sub_dir, &fname, &list_results]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
 
         auto deque_results = benchmark::run<std::deque<T>, tests::PushFront, makers::Empty, std::chrono::microseconds>(sizes, name, "std::deque");
         lst_ftr.get();
-        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deq_ftr = std::async(std::launch::async, [&sub_dir, &fname, &deque_results]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
 
         if constexpr (utils::is_small<T>()) {
             auto vec_results = benchmark::run<std::vector<T>, tests::PushFront, makers::Empty, std::chrono::microseconds>(sizes, name, "std::vector");
@@ -108,18 +108,18 @@ struct LinearSearch {
     static auto run() -> void
     {
         auto sizes = create_sizes(1'000UL);
-        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto fname = fmt::format("{}.csv", types::name<T>());
         auto sub_dir = fs::path { "linear-search" };
 
-        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto szs_ftr = std::async(std::launch::async, [&sub_dir, &fname, &sizes]() { csv::write(sub_dir, fname, "elements"s, sizes); });
         auto list_results = benchmark::run<std::list<T>, tests::LinearSearch, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::list");
         szs_ftr.get();
 
-        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto lst_ftr = std::async(std::launch::async, [&sub_dir, &fname, &list_results]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
         auto deque_results = benchmark::run<std::deque<T>, tests::LinearSearch, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::deque");
         lst_ftr.get();
 
-        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deq_ftr = std::async(std::launch::async, [&sub_dir, &fname, &deque_results]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
         auto vec_results = benchmark::run<std::vector<T>, tests::LinearSearch, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::vector");
         deq_ftr.get();
 
@@ -135,18 +135,18 @@ struct RandomInsert {
     static auto run() -> void
     {
         auto sizes = create_sizes(10'000UL);
-        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto fname = fmt::format("{}.csv", types::name<T>());
         auto sub_dir = fs::path { "random-insert" };
 
-        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto szs_ftr = std::async(std::launch::async, [&sub_dir, &fname, &sizes]() { csv::write(sub_dir, fname, "elements"s, sizes); });
         auto list_results = benchmark::run<std::list<T>, tests::RandomInsert, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::list");
         szs_ftr.get();
 
-        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto lst_ftr = std::async(std::launch::async, [&sub_dir, &fname, &list_results]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
         auto deque_results = benchmark::run<std::deque<T>, tests::RandomInsert, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::deque");
         lst_ftr.get();
 
-        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deq_ftr = std::async(std::launch::async, [&sub_dir, &fname, &deque_results]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
         auto vec_results = benchmark::run<std::vector<T>, tests::RandomInsert, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::vector");
         deq_ftr.get();
 
@@ -162,18 +162,18 @@ struct RandomErase {
     static auto run() -> void
     {
         auto sizes = create_sizes(10'000UL);
-        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto fname = fmt::format("{}.csv", types::name<T>());
         auto sub_dir = fs::path { "random-erase" };
 
-        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto szs_ftr = std::async(std::launch::async, [&sub_dir, &fname, &sizes]() { csv::write(sub_dir, fname, "elements"s, sizes); });
         auto list_results = benchmark::run<std::list<T>, tests::RandomErase, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::list");
         szs_ftr.get();
 
-        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto lst_ftr = std::async(std::launch::async, [&sub_dir, &fname, &list_results]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
         auto deque_results = benchmark::run<std::deque<T>, tests::RandomErase, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::deque");
         lst_ftr.get();
 
-        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deq_ftr = std::async(std::launch::async, [&sub_dir, &fname, &deque_results]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
         auto vec_results = benchmark::run<std::vector<T>, tests::RandomErase, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::vector");
         deq_ftr.get();
 
@@ -189,18 +189,18 @@ struct RandomRemove {
     static auto run() -> void
     {
         auto sizes = create_sizes(10'000UL);
-        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto fname = fmt::format("{}.csv", types::name<T>());
         auto sub_dir = fs::path { "random-remove" };
 
-        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto szs_ftr = std::async(std::launch::async, [&sub_dir, &fname, &sizes]() { csv::write(sub_dir, fname, "elements"s, sizes); });
         auto list_results = benchmark::run<std::list<T>, tests::RandomRemove, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::list");
         szs_ftr.get();
 
-        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto lst_ftr = std::async(std::launch::async, [&sub_dir, &fname, &list_results]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
         auto deque_results = benchmark::run<std::deque<T>, tests::RandomRemove, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::deque");
         lst_ftr.get();
 
-        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deq_ftr = std::async(std::launch::async, [&sub_dir, &fname, &deque_results]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
         auto vec_results = benchmark::run<std::vector<T>, tests::RandomRemove, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::vector");
         deq_ftr.get();
 
@@ -216,18 +216,18 @@ struct Sort {
     static auto run() -> void
     {
         auto sizes = create_sizes(10'000UL);
-        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto fname = fmt::format("{}.csv", types::name<T>());
         auto sub_dir = fs::path { "sort" };
 
-        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto szs_ftr = std::async(std::launch::async, [&sub_dir, &fname, &sizes]() { csv::write(sub_dir, fname, "elements"s, sizes); });
         auto list_results = benchmark::run<std::list<T>, tests::Sort, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::list");
         szs_ftr.get();
 
-        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto lst_ftr = std::async(std::launch::async, [&sub_dir, &fname, &list_results]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
         auto deque_results = benchmark::run<std::deque<T>, tests::Sort, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::deque");
         lst_ftr.get();
 
-        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deq_ftr = std::async(std::launch::async, [&sub_dir, &fname, &deque_results]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
         auto vec_results = benchmark::run<std::vector<T>, tests::Sort, makers::FilledRandom, std::chrono::microseconds>(sizes, name, "std::vector");
         deq_ftr.get();
 
@@ -243,18 +243,18 @@ struct Destroy {
     static auto run() -> void
     {
         auto sizes = create_sizes(100'000UL);
-        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto fname = fmt::format("{}.csv", types::name<T>());
         auto sub_dir = fs::path { "destroy" };
 
-        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto szs_ftr = std::async(std::launch::async, [&sub_dir, &fname, &sizes]() { csv::write(sub_dir, fname, "elements"s, sizes); });
         auto list_results = benchmark::run<std::list<T>, tests::Destroy, makers::Filled, std::chrono::microseconds>(sizes, name, "std::list");
         szs_ftr.get();
 
-        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto lst_ftr = std::async(std::launch::async, [&sub_dir, &fname, &list_results]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
         auto deque_results = benchmark::run<std::deque<T>, tests::Destroy, makers::Filled, std::chrono::microseconds>(sizes, name, "std::deque");
         lst_ftr.get();
 
-        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deq_ftr = std::async(std::launch::async, [&sub_dir, &fname, &deque_results]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
         auto vec_results = benchmark::run<std::vector<T>, tests::Destroy, makers::Filled, std::chrono::microseconds>(sizes, name, "std::vector");
         deq_ftr.get();
 
@@ -270,18 +270,18 @@ struct RandomSortedInsert {
     static auto run() -> void
     {
         auto sizes = create_sizes(10'000UL);
-        auto fname = ""s.append(types::name<T>()) + ".csv"s;
+        auto fname = fmt::format("{}.csv", types::name<T>());
         auto sub_dir = fs::path { "random-sorted-insert" };
 
-        auto szs_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "elements"s, sizes); });
+        auto szs_ftr = std::async(std::launch::async, [&sub_dir, &fname, &sizes]() { csv::write(sub_dir, fname, "elements"s, sizes); });
         auto list_results = benchmark::run<std::list<T>, tests::RandomSortedInsert, makers::Empty, std::chrono::microseconds>(sizes, name, "std::list");
         szs_ftr.get();
 
-        auto lst_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto lst_ftr = std::async(std::launch::async, [&sub_dir, &fname, &list_results]() { csv::write(sub_dir, fname, "std::list"s, list_results | to_count | ranges::to<std::vector<long double>>()); });
         auto deque_results = benchmark::run<std::deque<T>, tests::RandomSortedInsert, makers::Empty, std::chrono::microseconds>(sizes, name, "std::deque");
         lst_ftr.get();
 
-        auto deq_ftr = std::async(std::launch::async, [&]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
+        auto deq_ftr = std::async(std::launch::async, [&sub_dir, &fname, &deque_results]() { csv::write(sub_dir, fname, "std::deque"s, deque_results | to_count | ranges::to<std::vector<long double>>()); });
         auto vec_results = benchmark::run<std::vector<T>, tests::RandomSortedInsert, makers::Empty, std::chrono::microseconds>(sizes, name, "std::vector");
         deq_ftr.get();
 
@@ -292,6 +292,7 @@ struct RandomSortedInsert {
 template <template <typename> class Runner>
 auto run_for_types() -> void
 {
+    // Base case for template recursion
 }
 
 template <template <typename> class Runner, typename T, typename... Ts>

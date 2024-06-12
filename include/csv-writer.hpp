@@ -20,7 +20,7 @@ namespace csv {
 namespace fs = std::filesystem;
 using namespace std::literals;
 
-[[nodiscard]] auto src_absolute_path(const std::source_location src_loc = std::source_location::current()) noexcept
+[[nodiscard]] inline auto src_absolute_path(const std::source_location src_loc = std::source_location::current()) noexcept
     -> fs::path
 {
     return fs::weakly_canonical(fs::path { src_loc.file_name() });
@@ -56,11 +56,13 @@ auto write(
     auto sub_data_path = data_path / sub_dir;
     auto file_path = sub_data_path / fname;
 
-    if (!fs::exists(data_path))
+    if (!fs::exists(data_path)) {
         fs::create_directory(data_path);
+    }
 
-    if (!fs::exists(sub_data_path))
+    if (!fs::exists(sub_data_path)) {
         fs::create_directory(sub_data_path);
+    }
 
     if (!fs::exists(file_path)) {
         auto doc = rapidcsv::Document {};

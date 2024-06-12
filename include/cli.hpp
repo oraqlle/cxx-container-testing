@@ -30,7 +30,7 @@ constexpr std::array<std::string_view, 10> test_names = {
     "random sorted insert - Tests containers ability to have elements incrementally inserted into a sorted position."sv,
 };
 
-auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
+inline auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
 {
     for (const auto& test_arg : test_args) {
         if (test_arg == "all"sv) {
@@ -151,7 +151,7 @@ auto run_tests(const std::vector<std::string>& test_args) noexcept -> void
     }
 }
 
-auto list_tests() noexcept -> void
+inline auto list_tests() noexcept -> void
 {
     fmt::print("C++ Container Tester\n\nAvailable Tests:\n{}\n\n", fmt::join(test_names, "\n"sv));
 }

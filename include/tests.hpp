@@ -35,7 +35,7 @@ struct PushBack {
 
     inline static auto run(Container& container, std::size_t size) noexcept -> void
     {
-        for (auto i { 0UL }; i < size; ++i) {
+        for (auto inc { 0UL }; inc < size; ++inc) {
             container.push_back(value_type {});
         }
     }
@@ -49,7 +49,7 @@ struct PushFront {
 
     inline static auto run(Container& container, std::size_t size) noexcept -> void
     {
-        for (auto i { 0UL }; i < size; ++i) {
+        for (auto inc { 0UL }; inc < size; ++inc) {
             container.push_front(value_type {});
         }
     }
@@ -63,7 +63,7 @@ struct PushFront<std::vector<T>> {
 
     inline static auto run(std::vector<T>& container, std::size_t size) noexcept -> void
     {
-        for (auto i { 0UL }; i < size; ++i) {
+        for (auto inc { 0UL }; inc < size; ++inc) {
             container.insert(begin(container), value_type {});
         }
     }
@@ -77,10 +77,9 @@ struct LinearSearch {
 
     inline static auto run(Container& container, std::size_t size) noexcept -> void
     {
-        auto counter { 0UL };
-
-        for (auto i { 0UL }; i < size; ++i) {
-            if (std::ranges::find_if(container, [&](const auto& current) { return current.value() == i; }) != end(container)) {
+        auto counter { 0UL }; // NOLINT(clang-diagnostic-unused-but-set-variable)
+        for (const auto search { 0UL }; search < size; ++search) {
+            if (std::ranges::find_if(container, [&search](const auto& current) { return current.value() == search; }) != end(container)) {
                 counter += 1UL;
             }
         }
@@ -155,9 +154,6 @@ struct Destroy {
 template <typename Container>
 struct RandomSortedInsert {
 
-    static std::mt19937 gen;
-    static std::uniform_int_distribution<std::size_t> distrib;
-
     inline static auto run(Container& container, std::size_t size) noexcept -> void
     {
         for (auto idx { 0UL }; idx < size; ++idx) {
@@ -166,14 +162,12 @@ struct RandomSortedInsert {
         }
     }
 
+private:
+    inline static std::mt19937 gen = std::mt19937 { std::random_device {}() }; // NOLINT(cert-err58-cpp)
+    inline static std::uniform_int_distribution<std::size_t> distrib = std::uniform_int_distribution<std::size_t> {}; // NOLINT(cert-err58-cpp)
+
 }; // struct RandomSortedInsert
 
-template <typename Container>
-std::mt19937 RandomSortedInsert<Container>::gen = std::mt19937 { std::random_device {}() };
-
-template <typename Container>
-std::uniform_int_distribution<std::size_t> RandomSortedInsert<Container>::distrib = std::uniform_int_distribution<std::size_t> {};
-
-} // namespace test
+} // namespace tests
 
 #endif // CXX_CONTAINER_TESTING_TESTS

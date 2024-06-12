@@ -5,7 +5,6 @@
 
 #include <array>
 #include <string>
-#include <string_view>
 #include <type_traits>
 #include <utility>
 
@@ -23,7 +22,7 @@ struct Trivial {
     {
     }
 
-    [[nodiscard]] auto operator<(const Trivial& other) const noexcept -> bool { return m_value < other.m_value; }
+    [[nodiscard]] auto operator<=>(const Trivial& other) const noexcept = default;
 
     [[nodiscard]] auto value() const noexcept -> const std::size_t&
     {
@@ -31,8 +30,8 @@ struct Trivial {
     }
 
 private:
-    std::size_t m_value;
-    std::array<unsigned char, N - sizeof(m_value)> b;
+    std::size_t m_value { 0UL };
+    std::array<unsigned char, N - sizeof(m_value)> m_data {};
 }; // struct Trivial
 
 template <>
@@ -45,7 +44,7 @@ struct Trivial<sizeof(std::size_t)> {
     {
     }
 
-    [[nodiscard]] auto operator<(const Trivial& other) const noexcept -> bool { return m_value < other.m_value; }
+    [[nodiscard]] auto operator<=>(const Trivial& other) const noexcept = default;
 
     [[nodiscard]] auto value() const noexcept -> const std::size_t&
     {
@@ -53,7 +52,7 @@ struct Trivial<sizeof(std::size_t)> {
     }
 
 private:
-    std::size_t m_value;
+    std::size_t m_value { 0UL };
 }; // struct Trivial<sizeof(std::size_t)>
 
 using TrivialSmallType = types::Trivial<8>;
@@ -73,10 +72,7 @@ struct NonTrivialMovable {
 
     ~NonTrivialMovable() = default;
 
-    [[nodiscard]] auto operator<(const NonTrivialMovable& other) const -> bool
-    {
-        return m_value < other.m_value;
-    }
+    [[nodiscard]] auto operator<=>(const NonTrivialMovable& other) const = default;
 
     [[nodiscard]] auto value() const noexcept -> const std::size_t&
     {
@@ -84,8 +80,8 @@ struct NonTrivialMovable {
     }
 
 private:
+    std::size_t m_value { 0UL };
     std::string m_data { R"(abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=[]\\;',./_+{}:\"<>?)" };
-    std::size_t m_value;
 }; // struct NonTrivialMovable
 
 struct NonTrivialMovableNoexcept {
@@ -114,10 +110,7 @@ struct NonTrivialMovableNoexcept {
         return *this;
     }
 
-    [[nodiscard]] auto operator<(const NonTrivialMovableNoexcept& other) const noexcept -> bool
-    {
-        return m_value < other.m_value;
-    }
+    [[nodiscard]] auto operator<=>(const NonTrivialMovableNoexcept& other) const noexcept = default;
 
     [[nodiscard]] auto value() const noexcept -> const std::size_t&
     {
@@ -125,12 +118,12 @@ struct NonTrivialMovableNoexcept {
     }
 
 private:
+    std::size_t m_value { 0UL };
     std::string m_data { R"(abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-=[]\;',./_+{}:"<>?)" };
-    std::size_t m_value;
 }; // struct NonTrivialMovableNoexcept
 
 template <std::size_t N>
-struct NonTrivial {
+struct NonTrivial { // NOLINT(cppcoreguidelines-special-member-functions,hicpp-special-member-functions)
 
     NonTrivial() = default;
 
@@ -141,10 +134,7 @@ struct NonTrivial {
 
     ~NonTrivial() = default;
 
-    [[nodiscard]] auto operator<(const NonTrivial& other) const noexcept -> bool
-    {
-        return m_value < other.m_value;
-    }
+    [[nodiscard]] auto operator<=>(const NonTrivial& other) const noexcept = default;
 
     [[nodiscard]] auto value() const noexcept -> const std::size_t&
     {
@@ -152,34 +142,34 @@ struct NonTrivial {
     }
 
 private:
-    std::array<unsigned char, N - sizeof(std::size_t)> m_data;
-    std::size_t m_value;
+    std::size_t m_value { 0UL };
+    std::array<unsigned char, N - sizeof(std::size_t)> m_data {};
 }; // struct NonTrivial
 
 using NonTrivialMedium = NonTrivial<32>;
 
 template <typename T>
 [[nodiscard]] constexpr auto name() noexcept
-    -> std::string_view
+    -> std::string
 {
     if constexpr (std::is_same_v<T, TrivialSmallType>) {
-        return "TrivialSmallType"sv;
-    } else if (std::is_same_v<T, TrivialMediumType>) {
-        return "TrivialMediumType"sv;
-    } else if (std::is_same_v<T, TrivialLargeType>) {
-        return "TrivialLargeType"sv;
-    } else if (std::is_same_v<T, TrivialHugeType>) {
-        return "TrivialHugeType"sv;
-    } else if (std::is_same_v<T, TrivialMonsterType>) {
-        return "TrivialMonsterType"sv;
-    } else if (std::is_same_v<T, NonTrivialMovable>) {
-        return "NonTrivialMovable"sv;
-    } else if (std::is_same_v<T, NonTrivialMovableNoexcept>) {
-        return "NonTrivialMovableNoexcept"sv;
-    } else if (std::is_same_v<T, NonTrivialMedium>) {
-        return "NonTrivialMedium"sv;
+        return "TrivialSmallType"s;
+    } else if constexpr (std::is_same_v<T, TrivialMediumType>) {
+        return "TrivialMediumType"s;
+    } else if constexpr (std::is_same_v<T, TrivialLargeType>) {
+        return "TrivialLargeType"s;
+    } else if constexpr (std::is_same_v<T, TrivialHugeType>) {
+        return "TrivialHugeType"s;
+    } else if constexpr (std::is_same_v<T, TrivialMonsterType>) {
+        return "TrivialMonsterType"s;
+    } else if constexpr (std::is_same_v<T, NonTrivialMovable>) {
+        return "NonTrivialMovable"s;
+    } else if constexpr (std::is_same_v<T, NonTrivialMovableNoexcept>) {
+        return "NonTrivialMovableNoexcept"s;
+    } else if constexpr (std::is_same_v<T, NonTrivialMedium>) {
+        return "NonTrivialMedium"s;
     } else {
-        return "Sized-"s + std::to_string(sizeof(T));
+        return fmt::format("Sized-{}", sizeof(T));
     }
 }
 
